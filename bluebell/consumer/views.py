@@ -1,6 +1,5 @@
 import urllib
 import json
-import os
 from urlparse import urljoin
 
 from django.conf import settings
@@ -14,12 +13,11 @@ def home(request):
 
 def localize_stations(request):
     sodor_base_url = settings.SODOR_ENDPOINT
-    callsign_by_zip = settings.SODOR_CALLSIGN_BY_ZIP
     context = {}
     if request.method == 'POST':
         zipcode = request.POST.get('zipcode')
-        zipcode = zipcode + '.json'
-        url = urljoin(sodor_base_url, os.path.join(callsign_by_zip, zipcode))
+        callsign_by_zip = settings.SODOR_CALLSIGN_BY_ZIP % zipcode
+        url = urljoin(sodor_base_url, callsign_by_zip)
         data = json.loads(urllib.urlopen(url).read())
         context['data'] = data
     return render_to_response(
