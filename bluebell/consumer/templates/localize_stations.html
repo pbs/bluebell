@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container" style="padding-top: 23px;">
+        <form method='post' action='{% url bluebell.consumer.views.localize_stations %}'>
+            {% csrf_token %}
+            <div class="row">
+                <div class="offset2 span5 row">
+                    <input name='zipcode' type="number" style="height:27px; font-size: 16px;" required class="span5" placeholder="Enter your zipcode...">
+                </div>
+                <div class="span3">
+                    <button type="submit" class="btn btn-large">Localize</button>
+                </div>
+                {{ data }}
+            </div>
+        </form>
+    </div>
+{% endblock %}

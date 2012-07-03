@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block header %}
+    <header>
+        <div style="width:215px; margin-left: auto; margin-right: auto; margin-bottom: 36px; margin-top: 36px;">
+                <img src="{% get_static_prefix %}railway-vector.jpg" alt="Bluebell logo"/>
+                <h1 style="text-align: center; width: 100%; font-family: 'Exo', sans-serif; font-size: 36px; margin-top: 28px;">Bluebell</h1>
+        </div>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row offset2">
+            <a class="span3 btn btn-large" href="{% url bluebell.consumer.views.localize_stations %}">Localize Stations<i style="margin-left: 15px;"class="icon-globe"></i></a>
+            <a class="span3 btn btn-large" href="{% url bluebell.consumer.views.show_listings %}">Show Listings<i style="margin-left: 15px;"class="icon-tasks"></i></a>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block footer %}
+    <footer style="margin-top: 36px;">
+        <hr/>
+        <div class="container">
+            <div class="row" style="text-align: center">
+                <p>&copy; Copyright 2012 <a href="http://pbs.org/">PBS</a></p>
+            </div>
+        </div>
+    </footer>
+{% endblock %}

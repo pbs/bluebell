@@ -1,0 +1,23 @@
+{% load static %}
+
+<!doctype html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Sodor Bluebell</title>
+
+        <!-- Le styles -->
+        <link rel="stylesheet" href="{% get_static_prefix %}bootstrap/css/bootstrap.css">
+    </head>
+
+    <body style="background-color: whitesmoke; background-image: url('{% get_static_prefix %}lined_paper.png');">
+
+        {% block header %}{% endblock %}
+        {% block content %}{% endblock %}
+        {% block footer %}{% endblock %}
+
+        <!-- Le javascript -->
+        <script src="{% get_static_prefix %}bootstrap/js/bootstrap.js"></script>
+    </body>
+</html>
