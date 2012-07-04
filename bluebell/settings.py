@@ -146,4 +146,3 @@ LOGGING = {
 }
 
 SODOR_ENDPOINT = 'http://services-qa.pbs.org/'
-SODOR_CALLSIGN_BY_ZIP = '/callsigns/zip/%s.json'
