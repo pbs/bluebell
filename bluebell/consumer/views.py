@@ -2,7 +2,7 @@ from django.conf import settings
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from bluebell.consumer.extract import extract_callsign_by_zip
+from bluebell.consumer.extractors import extract_callsign_by_zip
 
 
 def home(request):

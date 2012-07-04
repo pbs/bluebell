@@ -2,6 +2,8 @@ import re
 import urllib
 import json
 
+from django.http import Http404
+
 
 def extract_callsign_by_zip(sodor_entry_point, zipcode):
         context = {}
@@ -18,7 +20,8 @@ def extract_callsign_by_zip(sodor_entry_point, zipcode):
         )
         zipcode_collection_data = _read_data(zipcode_collection_url)
 
-        if zipcode_collection_data['$items'] == []:
+        if (not zipcode_collection_data or
+            zipcode_collection_data['$items'] == []):
             return context
 
         callsign_by_zip_url = (
@@ -42,4 +45,9 @@ def extract_callsign_by_zip(sodor_entry_point, zipcode):
 
 
 def _read_data(url):
-    return json.loads(urllib.urlopen(url).read())
+    try:
+        response = json.loads(urllib.urlopen(url).read())
+    except ValueError:
+        return None
+    else:
+        return response
