@@ -43,6 +43,7 @@ def localize_stations(request):
                 'rank': item['rank'],
                 'confidence': item['confidence']}
         )
+        context['zipcode'] = zipcode
         context['data'] = callsigns
 
     return render_to_response(

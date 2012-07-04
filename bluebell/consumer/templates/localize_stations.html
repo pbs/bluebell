@@ -6,14 +6,15 @@
         <form method='post' action='{% url bluebell.consumer.views.localize_stations %}'>
             {% csrf_token %}
             <div class="row">
-                <div class="offset2 span5 row">
+                <h3 class="span1 offset1" style="text-align: center; padding-top:5px; color:#005580;">{{ zipcode }}</h3>
+                <div class="offset1 span5 row">
                     <input name='zipcode' type="number" style="height:27px; font-size: 16px;" required class="span5" placeholder="Enter your zipcode...">
                 </div>
                 <div class="span3">
                     <button type="submit" class="btn btn-large">Localize</button>
                 </div>
             </div>
-           <div class="container" style="padding-top: 23px;">
+            <div class="container" style="padding-top: 23px;">
                 <table class="table table-bordered table-striped">
                     <thead>
                         <th style="color:#D14;">Callsign</th>
