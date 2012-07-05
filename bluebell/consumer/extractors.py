@@ -2,8 +2,6 @@ import re
 import urllib
 import json
 
-from django.http import Http404
-
 
 def extract_callsign_by_zip(sodor_entry_point, zipcode):
         context = {}
