@@ -5,7 +5,10 @@ import json
 
 def extract_callsign_by_zip(sodor_entry_point, zipcode):
         context = {}
-        callsigns = []
+        result = {}
+        stations_merged_data = {}
+        ztc_data = []
+        ordered_ztc_data = []
 
         context['zipcode'] = zipcode
 
@@ -28,16 +31,30 @@ def extract_callsign_by_zip(sodor_entry_point, zipcode):
         callsign_by_zip_data = _read_data(callsign_by_zip_url)
 
         for item in callsign_by_zip_data['$items']:
-            callsigns.append({
-                'callsign': item['$links'][0]['callsign'],
-                'short_common_name':
-                    item['$links'][0]['$links'][0]['short_common_name'],
+            scn = item['$links'][0]['$links'][0]['short_common_name']
+            ztc_data.append({scn: {
+                'short_common_name': scn,
                 'flagship':
                     item['$links'][0]['$links'][0]['$links'][1]['callsign'],
+                'confidence': item['confidence'],
                 'rank': item['rank'],
-                'confidence': item['confidence']}
-        )
-        context['data'] = callsigns
+                'callsign': item['$links'][0]['callsign']}
+        })
+
+        for ztc in ztc_data:
+            for scn, station_data in ztc.iteritems():
+                if scn not in result:
+                    stations_merged_data = {}
+                else:
+                    stations_merged_data = result[scn]
+                for key in station_data:
+                    stations_merged_data.setdefault(
+                        key, []).append(station_data[key]
+                    )
+                    result[scn] = stations_merged_data
+
+        ordered_ztc_data = [result.get(item.keys()[0]) for item in ztc_data]
+        context['ztc_data'] = ordered_ztc_data
 
         return context
 

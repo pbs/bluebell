@@ -17,20 +17,20 @@
             <div class="container" style="padding-top: 23px;">
                 <table class="table table-bordered table-striped">
                     <thead>
-                        <th style="color:#005580;">Callsign</th>
-                        <th style="color:#C09853;">Short common name</th>
+                        <th style="color:#005580;">Short common name</th>
                         <th style="color:#C09853;">Flagship</th>
-                        <th style="color:#C09853;">Rank</th>
                         <th style="color:#C09853;">Confidence</th>
+                        <th style="color:#C09853;">Rank</th>
+                        <th style="color:#C09853;">Callsign</th>
                     </thead>
                     <tbody>
-                        {% for callsign in data %}
+                        {% for callsign in ztc_data %}
                             <tr>
-                                <td>{{ callsign.callsign }}</td>
                                 <td>{{ callsign.short_common_name }}</td>
                                 <td>{{ callsign.flagship }}</td>
-                                <td>{{ callsign.rank }}</td>
                                 <td>{{ callsign.confidence }}</td>
+                                <td>{{ callsign.rank }}</td>
+                                <td>{{ callsign.callsign }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
