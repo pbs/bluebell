@@ -26,11 +26,15 @@
                     <tbody>
                         {% for callsign in ztc_data %}
                             <tr>
-                                <td>{{ callsign.short_common_name }}</td>
-                                <td>{{ callsign.flagship }}</td>
-                                <td>{{ callsign.confidence }}</td>
-                                <td>{{ callsign.rank }}</td>
-                                <td>{{ callsign.callsign }}</td>
+                                <td>{{ callsign.short_common_name.0 }}</td>
+                                <td>{{ callsign.flagship.0 }}</td>
+                                <td>{{ callsign.confidence.0 }}</td>
+                                <td>{{ callsign.rank.0 }}</td>
+                                <td>
+                                    {% for cs in callsign.callsign %}
+                                        {{ cs }}
+                                    {% endfor %}
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>

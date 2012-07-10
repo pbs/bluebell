@@ -2,7 +2,8 @@ from django.conf import settings
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from bluebell.consumer.extractors import extract_callsign_by_zip
+from bluebell.consumer.browser import navigate_to_callsigns
+from bluebell.consumer.extractor import get_callsigns_data
 
 
 def home(request):
@@ -14,7 +15,8 @@ def localize_stations(request):
     if request.method == 'POST':
         sodor_base_url = settings.SODOR_ENDPOINT
         zipcode = request.POST.get('zipcode')
-        context = extract_callsign_by_zip(sodor_base_url, zipcode)
+        callsigns_page = navigate_to_callsigns(sodor_base_url, zipcode)
+        context = get_callsigns_data(callsigns_page, zipcode)
 
     return render_to_response(
         'localize_stations.html',
