@@ -1,3 +1,5 @@
+from datetime import datetime
+
 def get_localization_callsigns_data(callsign_by_zip_data, zipcode):
     ztc_data = []
     if not callsign_by_zip_data:
@@ -39,13 +41,23 @@ def get_feed_data(callsigns_feed_data):
 def get_listing_data(feed_listings_data):
     listing_data = []
     for item in feed_listings_data['$items']:
-        listing_data.append({
-            'start_date': item['start_date'],
-            'start_time': item['start_time'],
-            'duration': item['duration'],
-            'title': item['$links'][1]['title'],
-            'description': item['$links'][1]['description'],
-        })
+        start_date = item['start_date']
+        start_time = item['start_time']
+        listing_datetime = datetime.strptime(
+            start_date + start_time,
+            '%Y%m%d%H%M'
+        )
+        # TODO(calinf) Use timedelta for time comparison.
+        if listing_datetime.date() == datetime.today().date():
+            current_hour = datetime.now().hour
+            if (listing_datetime.hour > current_hour and
+                listing_datetime.hour < current_hour + 4):
+                listing_data.append({
+                    'start_date': start_date,
+                    'start_time': start_time,
+                    'duration': item['duration'],
+                    'title': item['$links'][1]['title'],
+                })
     return listing_data
 
 
