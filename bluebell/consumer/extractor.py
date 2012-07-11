@@ -23,6 +23,10 @@ def get_callsigns_data(callsign_by_zip_data, zipcode):
     return context
 
 
+def get_listings_data(listings_by_zip_data, zipcode):
+    pass
+
+
 def _group_callsign_data(ztc_data):
     stations = {}
     stations_merged_data = {}

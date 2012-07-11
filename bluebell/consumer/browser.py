@@ -23,6 +23,10 @@ def navigate_to_callsigns(sodor_entry_point, zipcode):
     return  _read_data(callsign_by_zip_url)
 
 
+def navigate_to_listings(sodor_entry_point, zipcode):
+    pass
+
+
 def _read_data(url):
     try:
         response = json.loads(urllib.urlopen(url).read())
