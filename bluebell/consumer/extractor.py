@@ -1,12 +1,7 @@
-def get_callsigns_data(callsign_by_zip_data, zipcode):
-    context = {}
+def get_localization_callsigns_data(callsign_by_zip_data, zipcode):
     ztc_data = []
-
-    context['zipcode'] = zipcode
-
     if not callsign_by_zip_data:
-        return context
-
+        return
     for item in callsign_by_zip_data['$items']:
         scn = item['$links'][0]['$links'][0]['short_common_name']
         ztc_data.append({scn: {
@@ -17,14 +12,41 @@ def get_callsigns_data(callsign_by_zip_data, zipcode):
             'rank': item['rank'],
             'callsign': item['$links'][0]['callsign']}
         })
-
-    context['ztc_data'] = _group_callsign_data(ztc_data)
-
-    return context
+    return _group_callsign_data(ztc_data)
 
 
-def get_listings_data(listings_by_zip_data, zipcode):
-    pass
+def get_listing_callsigns_data(callsign_by_zip_data, zipcode):
+    callsigns_feed_url = []
+    for item in callsign_by_zip_data['$items']:
+        if item['confidence'] == 100 and item['rank']:
+            callsign = item['$links'][0]['callsign']
+            callsigns_feed_url.append({
+                callsign: item['$links'][0]['$links'][1]['$self']
+            })
+    return callsigns_feed_url
+
+
+def get_feed_data(callsigns_feed_data):
+    feeds_listing_url = []
+    for item in callsigns_feed_data['$items']:
+        feed = item['$links'][1]['full_name']
+        feeds_listing_url.append({
+            feed: item['$links'][2]['$self']
+        })
+    return feeds_listing_url
+
+
+def get_listing_data(feed_listings_data):
+    listing_data = []
+    for item in feed_listings_data['$items']:
+        listing_data.append({
+            'start_date': item['start_date'],
+            'start_time': item['start_time'],
+            'duration': item['duration'],
+            'title': item['$links'][1]['title'],
+            'description': item['$links'][1]['description'],
+        })
+    return listing_data
 
 
 def _group_callsign_data(ztc_data):
@@ -46,4 +68,3 @@ def _group_callsign_data(ztc_data):
         for item in ztc_data if item.keys()[0] not in unique_scn
     ]
     return [stations.get(item) for item in ztc_data_keys]
-

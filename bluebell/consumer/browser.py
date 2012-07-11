@@ -23,8 +23,12 @@ def navigate_to_callsigns(sodor_entry_point, zipcode):
     return  _read_data(callsign_by_zip_url)
 
 
-def navigate_to_listings(sodor_entry_point, zipcode):
-    pass
+def navigate_to_feed(callsign_feed_url):
+    return _read_data(callsign_feed_url)
+
+
+def navigate_to_listings(feed_listings_url):
+    return _read_data(feed_listings_url)
 
 
 def _read_data(url):

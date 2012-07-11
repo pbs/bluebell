@@ -3,10 +3,15 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from bluebell.consumer.browser import (
-    navigate_to_callsigns, navigate_to_listings
+    navigate_to_callsigns,
+    navigate_to_feed,
+    navigate_to_listings,
 )
 from bluebell.consumer.extractor import (
-    get_callsigns_data, get_listings_data
+    get_localization_callsigns_data,
+    get_listing_callsigns_data,
+    get_feed_data,
+    get_listing_data,
 )
 
 
@@ -18,10 +23,12 @@ def localize_stations(request):
     context = {}
     if request.method == 'POST':
         zipcode = request.POST.get('zipcode')
+        context['zipcode'] = zipcode
         callsigns_page = navigate_to_callsigns(
             settings.SODOR_ENDPOINT, zipcode
         )
-        context = get_callsigns_data(callsigns_page, zipcode)
+        ztc_data = get_localization_callsigns_data(callsigns_page, zipcode)
+        context['ztc_data'] = ztc_data
 
     return render_to_response(
         'localize_stations.html',
@@ -34,10 +41,18 @@ def show_listings(request):
     context = {}
     if request.method == 'POST':
         zipcode = request.POST.get('zipcode')
-        listings_page = navigate_to_listings(
+        callsigns_page = navigate_to_callsigns(
             settings.SODOR_ENDPOINT, zipcode
         )
-        context = get_listings_data(listings_page, zipcode)
+        callsigns_feed_data = get_listing_callsigns_data(callsigns_page, zipcode)
+        for callsigns_feed in callsigns_feed_data:
+            for callsign, feed_url in callsigns_feed.iteritems():
+                feeds_page = navigate_to_feed(feed_url)
+                feed_listing_data = get_feed_data(feeds_page)
+                for feed_listing in feed_listing_data:
+                    for feed_name, listing_url in feed_listing.iteritems():
+                        listings_page = navigate_to_listings(listing_url)
+                        listings_data = get_listing_data(listings_page)
 
     return render_to_response(
         'show_listings.html',
