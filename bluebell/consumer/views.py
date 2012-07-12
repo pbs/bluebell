@@ -1,3 +1,4 @@
+import re
 from django.conf import settings
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -57,15 +58,12 @@ def show_listings(request):
                     callsigns = {}
                     feeds = {}
                     for feed_listing in feed_listing_data:
-                        for feed_name, listing_url in feed_listing.iteritems():
-                            listings_page = navigate_to_listings(listing_url)
-                            page_size, listings_data = get_listing_data(
-                                listings_page
-                            )
-                            if listings_data:
-                                feeds.setdefault(feed_name, []).extend(
-                                    listings_data
-                                )
+                        for feed_name, listings_url in feed_listing.iteritems():
+                            all_listings_data = _get_all_listings(listings_url)
+                            for listings_data in all_listings_data:
+                                if listings_data:
+                                    feeds.setdefault(feed_name, []).extend(
+                                        listings_data)
                     if feeds:
                         callsigns.setdefault(callsign, []).append(feeds)
                         listings.append(callsigns)
@@ -75,3 +73,19 @@ def show_listings(request):
         context,
         context_instance=RequestContext(request)
     )
+
+
+def _get_all_listings(listings_url):
+    all_listings_data = []
+    def _get_listings(listings_url):
+        listings_page = navigate_to_listings(listings_url)
+        page, items_count, page_size, listings_data = get_listing_data(
+            listings_page
+        )
+        all_listings_data.append(listings_data)
+        while items_count == page_size:
+            page = page + 1
+            listings_url = re.sub('..json', page + '.json', listings_url)
+            return _get_listings(listings_url)
+    _get_listings(listings_url)
+    return all_listings_data

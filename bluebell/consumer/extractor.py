@@ -45,6 +45,8 @@ def get_listing_data(feed_listings_data):
     if not feed_listings_data:
         return
     page_size = feed_listings_data['$page_size']
+    page = feed_listings_data['$page']
+    items_count = feed_listings_data['$items_count']
     for item in feed_listings_data['$items']:
         start_date = item['start_date']
         start_time = item['start_time']
@@ -60,7 +62,7 @@ def get_listing_data(feed_listings_data):
                 'duration': item['duration'],
                 'title': item['$links'][1]['title'],
             })
-    return page_size, listing_data
+    return page, items_count, page_size, listing_data
 
 
 def _group_callsign_data(ztc_data):
