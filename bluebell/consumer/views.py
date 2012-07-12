@@ -42,28 +42,28 @@ def show_listings(request):
     listings = []
     if request.method == 'POST':
         zipcode = request.POST.get('zipcode')
+        context['zipcode'] = zipcode
         callsigns_page = navigate_to_callsigns(
             settings.SODOR_ENDPOINT, zipcode
         )
         callsigns_feed_data = get_listing_callsigns_data(
             callsigns_page, zipcode
         )
-        feeds = {}
         for callsigns_feed in callsigns_feed_data:
             for callsign, feed_url in callsigns_feed.iteritems():
-                callsigns = {}
                 feeds_page = navigate_to_feed(feed_url)
                 feed_listing_data = get_feed_data(feeds_page)
+                callsigns = {}
+                feeds = {}
                 for feed_listing in feed_listing_data:
-                    feeds_list = []
                     for feed_name, listing_url in feed_listing.iteritems():
                         listings_page = navigate_to_listings(listing_url)
                         listings_data = get_listing_data(listings_page)
-                        feeds.setdefault(feed_name, []).extend(listings_data)
-                        feeds_list.append(feeds)
-                callsigns[callsign] = feeds_list
+                        if listings_data:
+                            feeds.setdefault(feed_name, []).extend(listings_data)
+                callsigns.setdefault(callsign, []).append(feeds)
                 listings.append(callsigns)
-    context['listings'] = listings
+        context['listings'] = listings
 
     return render_to_response(
         'show_listings.html',

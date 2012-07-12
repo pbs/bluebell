@@ -15,17 +15,39 @@
                 </div>
             </div>
             <div class="container" style="padding-top: 23px;">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                        <th style="color:#005580;">Callsign</th>
-                        <th style="color:#005580;">Feed</th>
-                        <th style="color:#C09853;">07:00</th>
-                        <th style="color:#C09853;">08:00</th>
-                        <th style="color:#C09853;">09:00</th>
-                        <th style="color:#C09853;">10:00</th>
-                    </thead>
-                    <tbody>
-                    </tbody>
+                <table class="table table-bordered">
+                    {% for callsigns in listings %}
+                        <tr>
+                        {% for callsign, feeds in callsigns.items %}
+                            <td>
+                                {{ callsign }}
+                            </td>
+                            <td>
+                                <table class="table table-bordered">
+                                {% for feed in feeds %}
+                                    {% for feed_name, listing_data in feed.items %}
+                                        <tr>
+                                            <td>
+                                                {{ feed_name }}
+                                            </td>
+                                            <td>
+                                                {% for data in listing_data %}
+                                                    <td>
+                                                        {{ data.start_time }}
+                                                    </td>
+                                                    <td>
+                                                        {{ data.title }}
+                                                    </td>
+                                                {% endfor %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endfor %}
+                                </table>
+                            </td>
+                        {% endfor %}
+                        </tr>
+                    {% endfor %}
                 </table>
             <div>
         </form>

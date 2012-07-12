@@ -47,17 +47,14 @@ def get_listing_data(feed_listings_data):
             start_date + start_time,
             '%Y%m%d%H%M'
         )
-        # TODO(calinf) Use timedelta for time comparison.
+        # TODO(calinf) Use timedelta for shrink time interval.
         if listing_datetime.date() == datetime.today().date():
-            current_hour = datetime.now().hour
-            if (listing_datetime.hour > current_hour and
-                listing_datetime.hour < current_hour + 4):
-                listing_data.append({
-                    'start_date': start_date,
-                    'start_time': start_time,
-                    'duration': item['duration'],
-                    'title': item['$links'][1]['title'],
-                })
+            listing_data.append({
+                'start_date': start_date,
+                'start_time': start_time,
+                'duration': item['duration'],
+                'title': item['$links'][1]['title'],
+            })
     return listing_data
 
 
