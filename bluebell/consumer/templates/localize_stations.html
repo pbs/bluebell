@@ -15,30 +15,32 @@
                 </div>
             </div>
             <div class="container" style="padding-top: 23px;">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                        <th style="color:#005580;">Short Common Name</th>
-                        <th style="color:#C09853;">Flagship</th>
-                        <th style="color:#C09853;">Confidence</th>
-                        <th style="color:#C09853;">Rank</th>
-                        <th style="color:#C09853;">Available Callsigns</th>
-                    </thead>
-                    <tbody>
-                        {% for callsign in ztc_data %}
-                            <tr>
-                                <td>{{ callsign.short_common_name.0 }}</td>
-                                <td>{{ callsign.flagship.0 }}</td>
-                                <td>{{ callsign.confidence.0 }}</td>
-                                <td>{{ callsign.rank.0 }}</td>
-                                <td>
-                                    {% for cs in callsign.callsign %}
-                                        {{ cs }}
-                                    {% endfor %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                {% if ztc_data %}
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <th style="color:#005580;">Short Common Name</th>
+                            <th style="color:#C09853;">Flagship</th>
+                            <th style="color:#C09853;">Confidence</th>
+                            <th style="color:#C09853;">Rank</th>
+                            <th style="color:#C09853;">Available Callsigns</th>
+                        </thead>
+                        <tbody>
+                            {% for callsign in ztc_data %}
+                                <tr>
+                                    <td>{{ callsign.short_common_name.0 }}</td>
+                                    <td>{{ callsign.flagship.0 }}</td>
+                                    <td>{{ callsign.confidence.0 }}</td>
+                                    <td>{{ callsign.rank.0 }}</td>
+                                    <td>
+                                        {% for cs in callsign.callsign %}
+                                            {{ cs }}
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
             <div>
         </form>
     </div>

@@ -15,42 +15,44 @@
                 </div>
             </div>
             <div class="container" style="padding-top: 23px;">
-                <table class="table table-bordered table-condensed">
-                    {% for callsigns in listings %}
-                        <tr>
-                        {% for callsign, feeds in callsigns.items %}
-                            <td>
-                                {{ callsign }}
-                            </td>
-                            <td>
-                                <table class="table table-bordered table-condensed">
-                                {% for feed in feeds %}
-                                    {% for feed_name, listing_data in feed.items %}
-                                        <tr>
-                                            <td>
-                                                {{ feed_name }}
-                                            </td>
-                                            <td>
-                                                <table class="table table-bordered table-condensed">
-                                                <tr>
-                                                    {% for data in listing_data %}
-                                                        <td>
-                                                           <div>{{ data.start_time|linebreaks }}</div>
-                                                           <div>{{ data.title }}</div>
-                                                        </td>
-                                                    {% endfor %}
-                                                </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
+                {% if listings %}
+                    <table class="table table-bordered table-condensed">
+                        {% for callsigns in listings %}
+                            <tr>
+                            {% for callsign, feeds in callsigns.items %}
+                                <td>
+                                    {{ callsign }}
+                                </td>
+                                <td>
+                                    <table class="table table-bordered table-condensed">
+                                    {% for feed in feeds %}
+                                        {% for feed_name, listing_data in feed.items %}
+                                            <tr>
+                                                <td>
+                                                    {{ feed_name }}
+                                                </td>
+                                                <td>
+                                                    <table class="table table-bordered table-condensed">
+                                                    <tr>
+                                                        {% for data in listing_data %}
+                                                            <td>
+                                                               <div>{{ data.start_time|linebreaks }}</div>
+                                                               <div>{{ data.title }}</div>
+                                                            </td>
+                                                        {% endfor %}
+                                                    </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
                                     {% endfor %}
-                                {% endfor %}
-                                </table>
-                            </td>
+                                    </table>
+                                </td>
+                            {% endfor %}
+                            </tr>
                         {% endfor %}
-                        </tr>
-                    {% endfor %}
-                </table>
+                    </table>
+                {% endif %}
             <div>
         </form>
     </div>
