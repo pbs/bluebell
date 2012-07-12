@@ -49,24 +49,27 @@ def show_listings(request):
         callsigns_feed_data = get_listing_callsigns_data(
             callsigns_page, zipcode
         )
-        for callsigns_feed in callsigns_feed_data:
-            for callsign, feed_url in callsigns_feed.iteritems():
-                feeds_page = navigate_to_feed(feed_url)
-                feed_listing_data = get_feed_data(feeds_page)
-                callsigns = {}
-                feeds = {}
-                for feed_listing in feed_listing_data:
-                    for feed_name, listing_url in feed_listing.iteritems():
-                        listings_page = navigate_to_listings(listing_url)
-                        page_size, listings_data = get_listing_data(
-                            listings_page
-                        )
-                        if listings_data:
-                            feeds.setdefault(feed_name, []).extend(listings_data)
-                callsigns.setdefault(callsign, []).append(feeds)
-                listings.append(callsigns)
-        context['listings'] = listings
-
+        if callsigns_feed_data:
+            for callsigns_feed in callsigns_feed_data:
+                for callsign, feed_url in callsigns_feed.iteritems():
+                    feeds_page = navigate_to_feed(feed_url)
+                    feed_listing_data = get_feed_data(feeds_page)
+                    callsigns = {}
+                    feeds = {}
+                    for feed_listing in feed_listing_data:
+                        for feed_name, listing_url in feed_listing.iteritems():
+                            listings_page = navigate_to_listings(listing_url)
+                            page_size, listings_data = get_listing_data(
+                                listings_page
+                            )
+                            if listings_data:
+                                feeds.setdefault(feed_name, []).extend(
+                                    listings_data
+                                )
+                    if feeds:
+                        callsigns.setdefault(callsign, []).append(feeds)
+                        listings.append(callsigns)
+            context['listings'] = listings
     return render_to_response(
         'show_listings.html',
         context,

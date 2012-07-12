@@ -42,8 +42,9 @@ def get_feed_data(callsigns_feed_data):
 
 def get_listing_data(feed_listings_data):
     listing_data = []
+    if not feed_listings_data:
+        return
     page_size = feed_listings_data['$page_size']
-    page = feed_listings_data['$page']
     for item in feed_listings_data['$items']:
         start_date = item['start_date']
         start_time = item['start_time']
