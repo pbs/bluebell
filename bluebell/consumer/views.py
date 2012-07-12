@@ -58,7 +58,9 @@ def show_listings(request):
                 for feed_listing in feed_listing_data:
                     for feed_name, listing_url in feed_listing.iteritems():
                         listings_page = navigate_to_listings(listing_url)
-                        listings_data = get_listing_data(listings_page)
+                        page_size, listings_data = get_listing_data(
+                            listings_page
+                        )
                         if listings_data:
                             feeds.setdefault(feed_name, []).extend(listings_data)
                 callsigns.setdefault(callsign, []).append(feeds)

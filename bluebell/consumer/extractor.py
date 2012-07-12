@@ -19,6 +19,8 @@ def get_localization_callsigns_data(callsign_by_zip_data, zipcode):
 
 def get_listing_callsigns_data(callsign_by_zip_data, zipcode):
     callsigns_feed_url = []
+    if not callsign_by_zip_data:
+        return
     for item in callsign_by_zip_data['$items']:
         if item['confidence'] == 100 and item['rank']:
             callsign = item['$links'][0]['callsign']
@@ -40,6 +42,8 @@ def get_feed_data(callsigns_feed_data):
 
 def get_listing_data(feed_listings_data):
     listing_data = []
+    page_size = feed_listings_data['$page_size']
+    page = feed_listings_data['$page']
     for item in feed_listings_data['$items']:
         start_date = item['start_date']
         start_time = item['start_time']
@@ -55,7 +59,7 @@ def get_listing_data(feed_listings_data):
                 'duration': item['duration'],
                 'title': item['$links'][1]['title'],
             })
-    return listing_data
+    return page_size, listing_data
 
 
 def _group_callsign_data(ztc_data):

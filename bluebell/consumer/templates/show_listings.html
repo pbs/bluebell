@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div class="container" style="padding-top: 23px;">
-                <table class="table table-bordered">
+                <table class="table table-bordered table-condensed">
                     {% for callsigns in listings %}
                         <tr>
                         {% for callsign, feeds in callsigns.items %}
@@ -23,7 +23,7 @@
                                 {{ callsign }}
                             </td>
                             <td>
-                                <table class="table table-bordered">
+                                <table class="table table-bordered table-condensed">
                                 {% for feed in feeds %}
                                     {% for feed_name, listing_data in feed.items %}
                                         <tr>
@@ -31,14 +31,16 @@
                                                 {{ feed_name }}
                                             </td>
                                             <td>
-                                                {% for data in listing_data %}
-                                                    <td>
-                                                        {{ data.start_time }}
-                                                    </td>
-                                                    <td>
-                                                        {{ data.title }}
-                                                    </td>
-                                                {% endfor %}
+                                                <table class="table table-bordered table-condensed">
+                                                <tr>
+                                                    {% for data in listing_data %}
+                                                        <td>
+                                                           <div>{{ data.start_time|linebreaks }}</div>
+                                                           <div>{{ data.title }}</div>
+                                                        </td>
+                                                    {% endfor %}
+                                                </tr>
+                                                </table>
                                             </td>
                                         </tr>
                                     {% endfor %}
