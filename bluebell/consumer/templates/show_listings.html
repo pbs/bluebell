@@ -36,9 +36,13 @@
                                                     <tr>
                                                         {% with listing_data|dictsort:"start_time" as ordered_list %}
                                                             {% for data in ordered_list|slice:":4"%}
-                                                                <td style="text-align: center; padding-top:12px; width:175px;">
+                                                                <td style="text-align: center; padding-top:8px; width:175px;">
                                                                    <div>{{ data.start_time|linebreaks }}</div>
-                                                                   <div>{{ data.title }}</div>
+                                                                   {% if data.title %}
+                                                                       <div>{{ data.title }}</div>
+                                                                   {% else %}
+                                                                       <div>{{ data.series_title }}</div>
+                                                                   {% endif %}
                                                                 </td>
                                                             {% endfor %}
                                                         {% endwith %}
