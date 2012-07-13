@@ -16,30 +16,32 @@
             </div>
             <div class="container" style="padding-top: 23px;">
                 {% if listings %}
-                    <table class="table table-bordered table-condensed">
+                    <table class="table table-bordered table-condensed" style="width:900px;">
                         {% for callsigns in listings %}
                             <tr>
                             {% for callsign, feeds in callsigns.items %}
-                                <td>
+                                <th style="text-align: center; vertical-align:middle; width:100px; color:#005580;">
                                     {{ callsign }}
-                                </td>
+                                </th>
                                 <td>
-                                    <table class="table table-bordered table-condensed">
+                                    <table class="table table-bordered table-condensed" style="width:800px;">
                                     {% for feed in feeds %}
                                         {% for feed_name, listing_data in feed.items %}
                                             <tr>
-                                                <td>
+                                                <th style="text-align: center; vertical-align:middle; width:100px; color:#C09853;">
                                                     {{ feed_name }}
-                                                </td>
+                                                </th>
                                                 <td>
-                                                    <table class="table table-bordered table-condensed">
+                                                    <table class="table table-bordered table-condensed" style="width:700px;">
                                                     <tr>
-                                                        {% for data in listing_data %}
-                                                            <td>
-                                                               <div>{{ data.start_time|linebreaks }}</div>
-                                                               <div>{{ data.title }}</div>
-                                                            </td>
-                                                        {% endfor %}
+                                                        {% with listing_data|dictsort:"start_time" as ordered_list %}
+                                                            {% for data in ordered_list|slice:":4"%}
+                                                                <td style="text-align: center; padding-top:12px; width:175px;">
+                                                                   <div>{{ data.start_time|linebreaks }}</div>
+                                                                   <div>{{ data.title }}</div>
+                                                                </td>
+                                                            {% endfor %}
+                                                        {% endwith %}
                                                     </tr>
                                                     </table>
                                                 </td>

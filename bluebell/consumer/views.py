@@ -75,17 +75,17 @@ def show_listings(request):
     )
 
 
-def _get_all_listings(listings_url):
-    all_listings_data = []
-    def _get_listings(listings_url):
-        listings_page = navigate_to_listings(listings_url)
-        page, items_count, page_size, listings_data = get_listing_data(
-            listings_page
-        )
-        all_listings_data.append(listings_data)
-        while items_count == page_size:
-            page = page + 1
-            listings_url = re.sub('..json', page + '.json', listings_url)
-            return _get_listings(listings_url)
-    _get_listings(listings_url)
+def _get_all_listings(listings_url, all_listings_data = None):
+    if all_listings_data is None:
+        all_listings_data = []
+    listings_page = navigate_to_listings(listings_url)
+    page, items_count, page_size, listings_data = get_listing_data(
+        listings_page
+    )
+    total_pages = items_count/page_size
+    all_listings_data.append(listings_data)
+    while page <= total_pages:
+        page = page + 1
+        listings_url = re.sub('\d+.json', str(page) + '.json', listings_url)
+        return _get_all_listings(listings_url, all_listings_data)
     return all_listings_data
