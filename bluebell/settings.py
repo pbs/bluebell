@@ -145,4 +145,4 @@ LOGGING = {
     }
 }
 
-SODOR_ENDPOINT = 'http://192.168.1.81:8001'
+SODOR_ENDPOINT = 'http://services-qa.pbs.org/'
