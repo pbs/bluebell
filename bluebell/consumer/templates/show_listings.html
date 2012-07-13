@@ -23,7 +23,7 @@
                                 <th style="text-align:center; width:100px; vertical-align:middle; color:#005580;">
                                     {{ callsign }}
                                 </th>
-                                <td>
+                                <td style="padding-top:22px;">
                                     <table class="table table-bordered table-condensed" style="width:840px;">
                                     {% for feed in feeds %}
                                         {% for feed_name, listing_data in feed.items %}
@@ -31,8 +31,8 @@
                                                 <th style="text-align: center; vertical-align:middle; width:140px; color:#C09853;">
                                                     {{ feed_name }}
                                                 </th>
-                                                <td>
-                                                    <table class="table table-bordered table-condensed" style="width:700px;">
+                                                <td style="padding-top:22px;">
+                                                    <table class="table table-bordered table-condensed table-striped" style="width:700px;">
                                                     <tr>
                                                         {% with listing_data|dictsort:"start_time" as ordered_list %}
                                                             {% for data in ordered_list|slice:":4"%}
