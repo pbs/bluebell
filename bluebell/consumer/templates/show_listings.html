@@ -5,11 +5,12 @@
     <div class="container" style="padding-top: 23px;">
         <form method='post' action='{% url bluebell.consumer.views.show_listings %}'>
             {% csrf_token %}
-            <div class="row">
+            <div class="rw">
                 <h3 class="span1 offset1" style="text-align: center; padding-top:5px; color:#005580;">{{ zipcode }}</h3>
                 <div class="offset1 span5 row">
-                    <input name="zipcode" type="text" maxlength="5" style="height:27px; font-size: 16px;" required class="input-small">
-                    <input name="time" type="text" style="height:27px; font-size: 16px;" required class="dropdown-timepicker input-small">
+                    <input name="zipcode" type="text" maxlength="5" style="height:27px; font-size: 16px; text-align:center;" required class="input-medium" placeholder="Enter your zipcode...">
+                    <input name="date" type="text" style="height:27px; font-size: 16px; margin-top: 0px; text-align:center;" required class="datepicker input-small">
+                    <input name="time" type="text" style="height:27px; font-size: 16px; text-align:center;" required class="timepicker input-small">
                 </div>
                 <div class="span3">
                     <button type="submit" class="btn btn-large">Show</button>

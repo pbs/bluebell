@@ -11,6 +11,8 @@
         <link rel="stylesheet" href="{% get_static_prefix %}bootstrap/css/bootstrap.css">
         <!-- Le timepicker styles -->
         <link rel="stylesheet" href="{% get_static_prefix %}bootstrap/css/timepicker.css">
+        <!-- Le datepicker styles -->
+        <link rel="stylesheet" href="{% get_static_prefix %}bootstrap/css/datepicker.css">
     </head>
 
     <body style="background-image: url('{% get_static_prefix %}weave.png');">
@@ -22,16 +24,36 @@
         <!-- Le base javascript -->
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
         <script src="{% get_static_prefix %}bootstrap/js/bootstrap.js"></script>
-        <script src="{% get_static_prefix %}bootstrap/js/bootstrap-timepicker.js"></script>
         <!-- Le timepicker javascript -->
+        <script src="{% get_static_prefix %}bootstrap/js/bootstrap-timepicker.js"></script>
         <script type="text/javascript">
             $(document).ready(function () {
-                $('.dropdown-timepicker').timepicker({
+                $('.timepicker').timepicker({
                     defaultTime: 'current',
-                    minuteStep: 1,
                     template: 'dropdown',
                     showSeconds: false,
                     showMeridian: false,
+                });
+            });
+        </script>
+        <!-- Le datepicker javascript -->
+        <script src="{% get_static_prefix %}bootstrap/js/bootstrap-datepicker.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var currentDate = new Date();
+                var month = currentDate.getMonth() + 1;
+                if (month < 10){
+                    month = "0" + month;
+                }
+                var day = currentDate.getDate();
+                if (day < 10){
+                    day = "0" + day;
+                }
+                var year = currentDate.getFullYear();
+                var formattedDate = month + "-" + day + "-" + year;
+                $('.datepicker').val(formattedDate);
+                $('.datepicker').datepicker({
+                    format: 'mm-dd-yyyy',
                 });
             });
         </script>
