@@ -7,8 +7,10 @@
         <meta charset="utf-8">
         <title>Sodor Bluebell</title>
 
-        <!-- Le styles -->
+        <!-- Le base styles -->
         <link rel="stylesheet" href="{% get_static_prefix %}bootstrap/css/bootstrap.css">
+        <!-- Le timepicker styles -->
+        <link rel="stylesheet" href="{% get_static_prefix %}bootstrap/css/timepicker.css">
     </head>
 
     <body style="background-image: url('{% get_static_prefix %}weave.png');">
@@ -17,7 +19,21 @@
         {% block content %}{% endblock %}
         {% block footer %}{% endblock %}
 
-        <!-- Le javascript -->
+        <!-- Le base javascript -->
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
         <script src="{% get_static_prefix %}bootstrap/js/bootstrap.js"></script>
+        <script src="{% get_static_prefix %}bootstrap/js/bootstrap-timepicker.js"></script>
+        <!-- Le timepicker javascript -->
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('.dropdown-timepicker').timepicker({
+                    defaultTime: 'current',
+                    minuteStep: 1,
+                    template: 'dropdown',
+                    showSeconds: false,
+                    showMeridian: false,
+                });
+            });
+        </script>
     </body>
 </html>
