@@ -43,6 +43,8 @@ def show_listings(request):
     listings = []
     if request.method == 'POST':
         zipcode = request.POST.get('zipcode')
+        date = request.POST.get('date')
+        time = request.POST.get('time')
         context['zipcode'] = zipcode
         callsigns_page = navigate_to_callsigns(
             settings.SODOR_ENDPOINT, zipcode
@@ -59,7 +61,11 @@ def show_listings(request):
                     feeds = {}
                     for feed_listing in feed_listing_data:
                         for feed_name, listings_url in feed_listing.iteritems():
-                            all_listings_data = _get_all_listings(listings_url)
+                            all_listings_data = _get_all_listings(
+                                listings_url,
+                                date,
+                                time
+                            )
                             for listings_data in all_listings_data:
                                 if listings_data:
                                     feeds.setdefault(feed_name, []).extend(
@@ -75,17 +81,17 @@ def show_listings(request):
     )
 
 
-def _get_all_listings(listings_url, all_listings_data = None):
+def _get_all_listings(listings_url, date, time, all_listings_data = None):
     if all_listings_data is None:
         all_listings_data = []
     listings_page = navigate_to_listings(listings_url)
     page, items_count, page_size, listings_data = get_listing_data(
-        listings_page
+        listings_page, date, time
     )
     total_pages = items_count/page_size
     all_listings_data.append(listings_data)
     while page <= total_pages:
         page = page + 1
         listings_url = re.sub('\d+.json', str(page) + '.json', listings_url)
-        return _get_all_listings(listings_url, all_listings_data)
+        return _get_all_listings(listings_url, date, time, all_listings_data)
     return all_listings_data

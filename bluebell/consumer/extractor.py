@@ -40,7 +40,7 @@ def get_feed_data(callsigns_feed_data):
     return feeds_listing_url
 
 
-def get_listing_data(feed_listings_data):
+def get_listing_data(feed_listings_data, date, time):
     listing_data = []
     if not feed_listings_data:
         return
@@ -54,9 +54,14 @@ def get_listing_data(feed_listings_data):
             start_date + start_time,
             '%Y%m%d%H%M'
         )
-        # TODO(calinf) Use timedelta to shrink the time interval.
-        if (listing_datetime.date() == datetime.today().date() and
-            listing_datetime.hour > datetime.now().hour):
+        input_month, input_day, input_year = date.split('-')
+        input_hour, input_minute = time.split(':')
+        if (listing_datetime.day == int(input_day) and
+            listing_datetime.month == int(input_month) and
+            listing_datetime.year == int(input_year) and
+            ((listing_datetime.hour == int(input_hour) and
+                listing_datetime.minute >= int(input_minute)) or
+                listing_datetime.hour > int(input_hour))):
             listing_data.append({
                 'start_date': start_date,
                 'start_time': start_time,
