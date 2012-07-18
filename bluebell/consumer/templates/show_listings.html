@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_nav.html" %}
 {% load static %}
 
 {% block content %}
@@ -6,17 +6,17 @@
         <form method='post' action='{% url bluebell.consumer.views.show_listings %}'>
             {% csrf_token %}
             <div class="rw">
-                <h3 class="span1 offset1" style="text-align: center; padding-top:5px; color:#005580;">{{ zipcode }}</h3>
+                <h3 class="span1" style="padding-top:5px;">{{ zipcode }}</h3>
                 <div class="offset1 span5 row">
-                    <input name="zipcode" type="text" maxlength="5" style="height:27px; font-size: 16px; text-align:center;" required class="input-medium" placeholder="Enter your zipcode...">
-                    <input name="date" type="text" style="height:27px; font-size: 16px; margin-top: 0px; text-align:center;" required class="datepicker input-small">
-                    <input name="time" type="text" style="height:27px; font-size: 16px; text-align:center;" required class="timepicker input-small">
+                    <input name="zipcode" type="text" maxlength="5" style="height:26px; font-size: 16px; text-align:center;" required class="input-medium" placeholder="Enter your zipcode...">
+                    <input name="date" type="text" style="height:26px; font-size: 16px; margin-top: 0px; text-align:center;" required class="datepicker input-small">
+                    <input name="time" type="text" style="height:26px; font-size: 16px; text-align:center;" required class="timepicker input-small">
                 </div>
-                <div class="span3">
-                    <button type="submit" class="btn btn-large">Show</button>
+                <div class="span1">
+                    <button type="submit" class="btn btn-large"><i class="icon-road" style="margin-left:15px; margin-right:15px;"></i></button>
                 </div>
             </div>
-            <div class="container" style="padding-top: 23px;">
+            <div class="container" style="padding-top:70px;">
                 {% if listings %}
                     <table class="table table-bordered table-condensed" style="width:940px;">
                         {% for callsigns in listings %}
@@ -39,8 +39,8 @@
                                                         {% with listing_data|dictsort:"start_time" as ordered_list %}
                                                             {% for data in ordered_list|slice:":4"%}
                                                                 <td style="text-align:center; padding-top:8px; width:175px;">
-                                                                   <div style="font-weight:bold;">{{ data.start_time|linebreaks }}</div>
-                                                                   <div style="color:#005580;">{{ data.title }}</div>
+                                                                   <div style="font-weight:bold;">{{ data.start_time|slice:":2"}}:{{ data.start_time|slice:"2:"}}</div>
+                                                                   <div>{{ data.title }}</div>
                                                                 </td>
                                                             {% endfor %}
                                                         {% endwith %}

@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_nav.html" %}
 {% load static %}
 
 {% block content %}
@@ -6,12 +6,12 @@
         <form method='post' action='{% url bluebell.consumer.views.localize_stations %}'>
             {% csrf_token %}
             <div class="row">
-                <h3 class="span1 offset1" style="text-align: center; padding-top:5px; color:#005580;">{{ zipcode }}</h3>
-                <div class="offset1 span5 row">
-                    <input name='zipcode' type="text" maxlength="5" style="height:27px; font-size: 16px; text-align:center;" required class="span5" placeholder="Enter your zipcode...">
+                <h3 class="span1" style="center; padding-top:5px;">{{ zipcode }}</h3>
+                <div class="offset1 span5 row" style="padding-left:20px;">
+                    <input name='zipcode' type="text" maxlength="5" style="height:26px; font-size:16px; text-align:center;" required class="span5" placeholder="Enter your zipcode...">
                 </div>
-                <div class="span3">
-                    <button type="submit" class="btn btn-large">Localize</button>
+                <div class="span1">
+                    <button type="submit" class="btn btn-large"><i class="icon-road" style="margin-left:15px; margin-right:15px;"></i></button>
                 </div>
             </div>
             <div class="container" style="padding-top: 23px;">
