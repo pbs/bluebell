@@ -6,7 +6,7 @@
         <form method='post' action='{% url bluebell.consumer.views.show_listings %}'>
             {% csrf_token %}
             <div class="row">
-                <div class="span12">
+                <div class="span7 offset2" style="padding-left:40px;">
                     <input name="zipcode" type="text" maxlength="5" style="height:26px; font-size: 16px; text-align:center;" value="{{ zipcode }}" required placeholder="Enter your zipcode...">
                     <input name="date" type="text" style="height:26px; font-size: 16px; margin-top: 0px; text-align:center;" required class="datepicker input-small">
                     <input name="time" type="text" style="height:26px; font-size: 16px; text-align:center;" required class="timepicker input-small">
@@ -15,7 +15,7 @@
             </div>
             <div class="container" style="padding-top:26px;">
                 {% if listings %}
-                    <table class="table table-bordered table-condensed" style="width:940px;">
+                    <table class="table table-bordered" style="width:940px;">
                         {% for callsigns in listings %}
                             <tr>
                             {% for callsign, feeds in callsigns.items %}
@@ -23,7 +23,7 @@
                                     {{ callsign }}
                                 </th>
                                 <td style="padding-top:22px;">
-                                    <table class="table table-bordered table-condensed" style="width:840px;">
+                                    <table class="table table-bordered" style="width:840px;">
                                     {% for feed in feeds %}
                                         {% for feed_name, listing_data in feed.items %}
                                             <tr>
@@ -31,7 +31,7 @@
                                                     {{ feed_name }}
                                                 </th>
                                                 <td style="padding-top:22px;">
-                                                    <table class="table table-bordered table-condensed table-striped" style="width:700px;">
+                                                    <table class="table table-bordered table-striped" style="width:700px;">
                                                     <tr>
                                                         {% with listing_data|dictsort:"start_time" as ordered_list %}
                                                             {% for data in ordered_list|slice:":4"%}
