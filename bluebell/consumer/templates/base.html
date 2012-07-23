@@ -57,5 +57,17 @@
                 });
             });
         </script>
+        <!-- Le tooltip javascript -->
+        <script src="{% get_static_prefix %}bootstrap/js/bootstrap-tooltip.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('.sort_help').tooltip({
+                    title: '<< sort help >>',
+                });
+                $('.confidence_help').tooltip({
+                    title: '<< confidence help >>',
+                });
+            });
+        </script>
     </body>
 </html>
