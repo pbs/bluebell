@@ -60,9 +60,9 @@ def show_listings(request):
                     callsigns = {}
                     feeds = {}
                     for feed_listing in feed_listing_data:
-                        for feed_name, listings_url in feed_listing.iteritems():
+                        for feed_name, filter_url in feed_listing.iteritems():
                             listings_data = _get_listings_by_date(
-                                listings_url, date, time
+                                filter_url, date, time
                             )
                             if listings_data:
                                 feeds.setdefault(feed_name, []).extend(
@@ -78,15 +78,13 @@ def show_listings(request):
     )
 
 
-def _get_listings_by_date(listings_url, date, time):
+def _get_listings_by_date(filter_url, date, time):
     input_month, input_day, input_year = date.split('-')
     url_date_format = input_year + input_month + input_day
-    listings_page = _read_data(listings_url)
-    listings_filter_url = listings_page['$filters']['date']
-    listings_filter_url = re.sub(
-        '{date}.json', url_date_format + '.json', listings_filter_url
+    filter_url = re.sub(
+        '{date}.json', url_date_format + '.json', filter_url
     )
-    listings_by_date_page = _read_data(listings_filter_url)
+    listings_by_date_page = _read_data(filter_url)
     listings_data = get_listing_data(
         listings_by_date_page, date, time
     )

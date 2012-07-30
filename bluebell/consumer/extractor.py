@@ -35,7 +35,7 @@ def get_feed_data(callsigns_feed_data):
     for item in callsigns_feed_data['$items']:
         feed = item['$links'][1]['full_name']
         feeds_listing_url.append({
-            feed: item['$links'][2]['$self']
+            feed: item['$links'][2]['$filters']['date']
         })
     return feeds_listing_url
 
