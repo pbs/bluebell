@@ -13,6 +13,8 @@
         <link rel="stylesheet" href="{% get_static_prefix %}bootstrap/css/timepicker.css">
         <!-- Le datepicker styles -->
         <link rel="stylesheet" href="{% get_static_prefix %}bootstrap/css/datepicker.css">
+        <!-- Le chosen styles -->
+        <link rel="stylesheet" href="{% get_static_prefix %}chosen/chosen.css">
     </head>
 
     <body style="background-image: url('{% get_static_prefix %}weave.png');">
@@ -70,6 +72,12 @@
                     placement: 'left',
                 });
             });
+        </script>
+        <!-- Le chosen javascript -->
+        <script src="{% get_static_prefix %}chosen/chosen.jquery.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            $(".chzn-select").chosen();
+            $(".chzn-select-deselect").chosen({allow_single_deselect:true});
         </script>
     </body>
 </html>
