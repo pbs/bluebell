@@ -146,3 +146,9 @@ LOGGING = {
 }
 
 SODOR_ENDPOINT = 'http://services-qa.pbs.org'
+
+try:
+    from settings_local import *
+except ImportError:
+    pass
+
