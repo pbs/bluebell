@@ -64,9 +64,11 @@ def show_listings(request):
         zipcode = request.POST.get('zipcode')
         date = request.POST.get('date')
         time = request.POST.get('time')
-        headend = request.POST.get('headend')
-        print headend
+        channels_url = request.POST.get('channels_url')
         context['zipcode'] = zipcode
+
+        input_month, input_day, input_year = date.split('-')
+        url_date_format = input_year + input_month + input_day
 
         services_data = _read_data(settings.SODOR_ENDPOINT)
         zipcode_collection_url = (
@@ -105,6 +107,17 @@ def show_listings(request):
         callsigns_feed_data = get_listing_callsigns_data(
             callsigns_page, zipcode
         )
+
+        if channels_url:
+            callsigns = {}
+            feeds = {}
+            channels_data = _read_data(channels_url)
+            for channel in channels_data['$items']:
+                filter_url = channel['$links'][0]['$links'][2]['$filters']['date']
+                listings_data = _get_listings_by_date(
+                    filter_url, url_date_format, time
+                )
+
         if callsigns_feed_data:
             for callsigns_feed in callsigns_feed_data:
                 for callsign, feed_url in callsigns_feed.iteritems():
@@ -115,7 +128,7 @@ def show_listings(request):
                     for feed_listing in feed_listing_data:
                         for feed_name, filter_url in feed_listing.iteritems():
                             listings_data = _get_listings_by_date(
-                                filter_url, date, time
+                                filter_url, url_date_format, time
                             )
                             if listings_data:
                                 feeds.setdefault(feed_name, []).extend(
@@ -132,10 +145,8 @@ def show_listings(request):
 
 
 def _get_listings_by_date(filter_url, date, time):
-    input_month, input_day, input_year = date.split('-')
-    url_date_format = input_year + input_month + input_day
     filter_url = re.sub(
-        '{date}.json', url_date_format + '.json', filter_url
+        '{date}.json', date + '.json', filter_url
     )
     listings_by_date_page = _read_data(filter_url)
     listings_data = get_listing_data(

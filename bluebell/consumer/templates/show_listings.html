@@ -4,11 +4,11 @@
 {% block header %}
     <script type="text/javascript">
         function getURL(sel) {
-            var he_url = sel.options[sel.selectedIndex].value;
+            var channels_url = sel.options[sel.selectedIndex].value;
             $('<input>').attr({
                 type: 'hidden',
-                value: he_url,
-                name: 'headend'
+                value: channels_url,
+                name: 'channels_url'
             }).appendTo('form');
         }
     </script>
@@ -30,8 +30,8 @@
                         <p class="span3" style="padding-left:80px; margin-right:48px;"> Select your TV provider... </p>
                         <select id='headends' onchange="getURL(this)" data-placeholder="Select your TV provider" class="chzn-select">
                             <option>Over the Air Broadcast</option>
-                            {% for he_name, he_url in headends %}
-                                <option value={{ he_url }}>{{ he_name }}</option>
+                            {% for he_name, channels_url in headends %}
+                                <option value={{ channels_url }}>{{ he_name }}</option>
                             {% endfor %}
                         </select>
                     </div>
