@@ -64,6 +64,8 @@ def show_listings(request):
         zipcode = request.POST.get('zipcode')
         date = request.POST.get('date')
         time = request.POST.get('time')
+        headend = request.POST.get('headend')
+        print headend
         context['zipcode'] = zipcode
 
         services_data = _read_data(settings.SODOR_ENDPOINT)
@@ -74,13 +76,18 @@ def show_listings(request):
             re.sub('{zipcode}', zipcode, zipcode_collection_url)
         )
 
-        zipcode_data = client.load(zipcode_collection_url)
-        headends = zipcode_data.items()[0].related('presence')
-        for headend in headends.items():
-            headends_data.append(
-                (headend.content.name, headend.related('children').self)
-            )
-        context['headends'] = headends_data
+        try:
+            zipcode_data = client.load(zipcode_collection_url)
+        except KeyError:
+            pass
+        else:
+            if zipcode_data.items():
+                headends = zipcode_data.items()[0].related('presence')
+                for headend in headends.items():
+                    headends_data.append(
+                        (headend.content.name, headend.related('children').self)
+                    )
+            context['headends'] = headends_data
 
         zipcode_collection_data = _read_data(zipcode_collection_url)
         if (not zipcode_collection_data or

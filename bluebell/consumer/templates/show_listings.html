@@ -1,6 +1,19 @@
 {% extends "base_nav.html" %}
 {% load static %}
 
+{% block header %}
+    <script type="text/javascript">
+        function getURL(sel) {
+            var he_url = sel.options[sel.selectedIndex].value;
+            $('<input>').attr({
+                type: 'hidden',
+                value: he_url,
+                name: 'headend'
+            }).appendTo('form');
+        }
+    </script>
+{% endblock %}
+
 {% block content %}
     <div class="container" style="padding-top: 23px;">
         <form method='post' action='{% url bluebell.consumer.views.show_listings %}'>
@@ -15,10 +28,10 @@
                 <div class="row">
                     <div class="offset2">
                         <p class="span3" style="padding-left:80px; margin-right:48px;"> Select your TV provider... </p>
-                        <select data-placeholder="Select your TV provider" class="chzn-select">
+                        <select id='headends' onchange="getURL(this)" data-placeholder="Select your TV provider" class="chzn-select">
                             <option>Over the Air Broadcast</option>
                             {% for he_name, he_url in headends %}
-                                <option>{{ he_name }}</option>
+                                <option value={{ he_url }}>{{ he_name }}</option>
                             {% endfor %}
                         </select>
                     </div>
