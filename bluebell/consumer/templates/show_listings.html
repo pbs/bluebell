@@ -17,7 +17,9 @@
                         <p class="span3" style="padding-left:80px; margin-right:48px;"> Select your TV provider... </p>
                         <select data-placeholder="Select your TV provider" class="chzn-select">
                             <option>Over the Air Broadcast</option>
-                            <option>xxxxx</option>
+                            {% for he_name, he_url in headends %}
+                                <option>{{ he_name }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>

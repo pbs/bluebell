@@ -12,6 +12,8 @@ from bluebell.consumer.extractor import (
     get_listing_data,
 )
 
+from resty import client
+
 
 def home(request):
     return render_to_response('home.html', {})
@@ -57,6 +59,7 @@ def localize_stations(request):
 def show_listings(request):
     context = {}
     listings = []
+    headends_data = []
     if request.method == 'POST':
         zipcode = request.POST.get('zipcode')
         date = request.POST.get('date')
@@ -70,8 +73,16 @@ def show_listings(request):
         zipcode_collection_url = (
             re.sub('{zipcode}', zipcode, zipcode_collection_url)
         )
-        zipcode_collection_data = _read_data(zipcode_collection_url)
 
+        zipcode_data = client.load(zipcode_collection_url)
+        headends = zipcode_data.items()[0].related('presence')
+        for headend in headends.items():
+            headends_data.append(
+                (headend.content.name, headend.related('children').self)
+            )
+        context['headends'] = headends_data
+
+        zipcode_collection_data = _read_data(zipcode_collection_url)
         if (not zipcode_collection_data or
             zipcode_collection_data['$items'] == []):
             return render_to_response(
@@ -84,7 +95,6 @@ def show_listings(request):
             zipcode_collection_data['$items'][0]['$links'][0]['$self']
         )
         callsigns_page = _read_data(callsign_by_zip_url)
-
         callsigns_feed_data = get_listing_callsigns_data(
             callsigns_page, zipcode
         )
