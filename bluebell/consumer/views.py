@@ -5,9 +5,6 @@ from django.conf import settings
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from bluebell.consumer.browser import (
-    navigate_to_callsigns,
-)
 from bluebell.consumer.extractor import (
     get_localization_callsigns_data,
     get_listing_callsigns_data,
@@ -25,9 +22,28 @@ def localize_stations(request):
     if request.method == 'POST':
         zipcode = request.POST.get('zipcode')
         context['zipcode'] = zipcode
-        callsigns_page = navigate_to_callsigns(
-            settings.SODOR_ENDPOINT, zipcode
+
+        services_data = _read_data(settings.SODOR_ENDPOINT)
+        zipcode_collection_url = (
+            services_data['$services']['zipcodes']['$filters']['zip']
         )
+        zipcode_collection_url = (
+            re.sub('{zipcode}', zipcode, zipcode_collection_url)
+        )
+        zipcode_collection_data = _read_data(zipcode_collection_url)
+
+        if (not zipcode_collection_data or
+            zipcode_collection_data['$items'] == []):
+            return render_to_response(
+                'localize_stations.html',
+                context,
+                context_instance=RequestContext(request)
+            )
+
+        callsign_by_zip_url = (
+            zipcode_collection_data['$items'][0]['$links'][0]['$self']
+        )
+        callsigns_page = _read_data(callsign_by_zip_url)
         ztc_data = get_localization_callsigns_data(callsigns_page, zipcode)
         context['ztc_data'] = ztc_data
 
@@ -46,9 +62,29 @@ def show_listings(request):
         date = request.POST.get('date')
         time = request.POST.get('time')
         context['zipcode'] = zipcode
-        callsigns_page = navigate_to_callsigns(
-            settings.SODOR_ENDPOINT, zipcode
+
+        services_data = _read_data(settings.SODOR_ENDPOINT)
+        zipcode_collection_url = (
+            services_data['$services']['zipcodes']['$filters']['zip']
         )
+        zipcode_collection_url = (
+            re.sub('{zipcode}', zipcode, zipcode_collection_url)
+        )
+        zipcode_collection_data = _read_data(zipcode_collection_url)
+
+        if (not zipcode_collection_data or
+            zipcode_collection_data['$items'] == []):
+            return render_to_response(
+                'show_listings.html',
+                context,
+                context_instance=RequestContext(request)
+            )
+
+        callsign_by_zip_url = (
+            zipcode_collection_data['$items'][0]['$links'][0]['$self']
+        )
+        callsigns_page = _read_data(callsign_by_zip_url)
+
         callsigns_feed_data = get_listing_callsigns_data(
             callsigns_page, zipcode
         )

@@ -6,10 +6,6 @@ dependencies = [
     'resty',
 ]
 
-dependency_links = [
-    'http://username:password@github.com/pbs/resty/tarball/master#egg=resty',
-]
-
 setup(
     name='bluebell',
     version='0.1',
@@ -18,5 +14,4 @@ setup(
     author_email='tpg-pbs-coreservices@threepillarglobal.com',
     url='https://github.com/pbs/bluebell',
     install_requires=dependencies,
-    dependency_links = dependency_links,
 )
