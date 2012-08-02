@@ -60,6 +60,7 @@ def show_listings(request):
     context = {}
     listings = []
     headends_data = []
+    selected_headend = False
     if request.method == 'POST':
         zipcode = request.POST.get('zipcode')
         date = request.POST.get('date')
@@ -109,6 +110,7 @@ def show_listings(request):
         )
 
         if channels_url:
+            selected_headend = True
             callsigns = {}
             feeds = {}
             channels_data = _read_data(channels_url)
@@ -122,11 +124,13 @@ def show_listings(request):
                 )
                 feeds = {}
                 if listings_data:
+                    listings_data.insert(0, channel_number)
                     feeds[feed_name] = listings_data
                 if feeds:
                     callsigns.setdefault(callsign, []).append(feeds)
             listings = [{key:val} for key, val in callsigns.iteritems()]
             context['listings'] = listings
+            context['selected_headend'] = selected_headend
 
         else:
             for callsigns_feed in callsigns_feed_data:
@@ -147,6 +151,7 @@ def show_listings(request):
                         callsigns.setdefault(callsign, []).append(feeds)
                         listings.append(callsigns)
             context['listings'] = listings
+            context['selected_headend'] = selected_headend
     return render_to_response(
         'show_listings.html',
         context,

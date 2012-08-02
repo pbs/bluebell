@@ -39,19 +39,33 @@
                                         {% for feed_name, listing_data in feed.items %}
                                             <tr>
                                                 <th style="text-align: center; vertical-align:middle; width:140px; color:#C09853;">
-                                                    {{ feed_name }}
+                                                    <div>{{ feed_name }}</div>
+                                                    {% if selected_headend %}
+                                                        <p style="color:#333;">{{ listing_data.0 }}</p>
+                                                    {% endif %}
                                                 </th>
                                                 <td style="padding-top:22px;">
                                                     <table class="table table-bordered table-striped" style="width:700px;">
                                                     <tr>
-                                                        {% with listing_data|dictsort:"start_time" as ordered_list %}
-                                                            {% for data in ordered_list|slice:":4"%}
-                                                                <td style="text-align:center; padding-top:8px; width:175px;">
-                                                                   <div style="font-weight:bold;">{{ data.start_time|slice:":2"}}:{{ data.start_time|slice:"2:"}}</div>
-                                                                   <div>{{ data.title }}</div>
-                                                                </td>
-                                                            {% endfor %}
-                                                        {% endwith %}
+                                                        {% if selected_headend %}
+                                                            {% with listing_data|slice:"1:"|dictsort:"start_time" as ordered_list %}
+                                                                {% for data in ordered_list|slice:":4"%}
+                                                                    <td style="text-align:center; padding-top:8px; width:175px;">
+                                                                       <div style="font-weight:bold;">{{ data.start_time|slice:":2"}}:{{ data.start_time|slice:"2:"}}</div>
+                                                                       <div>{{ data.title }}</div>
+                                                                    </td>
+                                                                {% endfor %}
+                                                            {% endwith %}
+                                                        {% else %}
+                                                            {% with listing_data|dictsort:"start_time" as ordered_list %}
+                                                                {% for data in ordered_list|slice:":4"%}
+                                                                    <td style="text-align:center; padding-top:8px; width:175px;">
+                                                                       <div style="font-weight:bold;">{{ data.start_time|slice:":2"}}:{{ data.start_time|slice:"2:"}}</div>
+                                                                       <div>{{ data.title }}</div>
+                                                                    </td>
+                                                                {% endfor %}
+                                                            {% endwith %}
+                                                        {% endif %}
                                                     </tr>
                                                     </table>
                                                 </td>
