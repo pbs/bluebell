@@ -145,7 +145,7 @@ LOGGING = {
     }
 }
 
-SODOR_ENDPOINT = 'http://services-qa.pbs.org'
+SODOR_ENDPOINT = 'http://192.168.1.81:8001'
 
 try:
     from settings_local import *

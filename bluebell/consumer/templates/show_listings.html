@@ -1,19 +1,6 @@
 {% extends "base_nav.html" %}
 {% load static %}
 
-{% block header %}
-    <script type="text/javascript">
-        function getURL(sel) {
-            var channels_url = sel.options[sel.selectedIndex].value;
-            $('<input>').attr({
-                type: 'hidden',
-                value: channels_url,
-                name: 'channels_url'
-            }).appendTo('form');
-        }
-    </script>
-{% endblock %}
-
 {% block content %}
     <div class="container" style="padding-top: 23px;">
         <form method='post' action='{% url bluebell.consumer.views.show_listings %}'>
