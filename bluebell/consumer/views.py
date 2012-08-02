@@ -113,12 +113,22 @@ def show_listings(request):
             feeds = {}
             channels_data = _read_data(channels_url)
             for channel in channels_data['$items']:
+                channel_number = channel['cable_number']
+                callsign = channel['$links'][0]['$links'][0]['callsign']
+                feed_name = channel['$links'][0]['$links'][1]['full_name']
                 filter_url = channel['$links'][0]['$links'][2]['$filters']['date']
                 listings_data = _get_listings_by_date(
                     filter_url, url_date_format, time
                 )
+                feeds = {}
+                if listings_data:
+                    feeds[feed_name] = listings_data
+                if feeds:
+                    callsigns.setdefault(callsign, []).append(feeds)
+            listings = [{key:val} for key, val in callsigns.iteritems()]
+            context['listings'] = listings
 
-        if callsigns_feed_data:
+        else:
             for callsigns_feed in callsigns_feed_data:
                 for callsign, feed_url in callsigns_feed.iteritems():
                     feeds_page = _read_data(feed_url)
