@@ -131,6 +131,7 @@ def show_listings(request):
             listings = [{key:val} for key, val in callsigns.iteritems()]
             context['listings'] = listings
             context['selected_headend'] = selected_headend
+            context['selected_channels_url'] = channels_url
 
         else:
             for callsigns_feed in callsigns_feed_data:

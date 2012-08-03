@@ -80,15 +80,5 @@
             $(".chzn-select").chosen();
             $(".chzn-select-deselect").chosen({allow_single_deselect:true});
         </script>
-        <script type="text/javascript">
-            function getURL(sel) {
-                var channels_url = sel.options[sel.selectedIndex].value;
-                $('<input>').attr({
-                    type: 'hidden',
-                    value: channels_url,
-                    name: 'channels_url'
-                }).appendTo('form');
-            }
-        </script>
     </body>
 </html>

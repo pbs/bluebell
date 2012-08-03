@@ -15,10 +15,14 @@
                 <div class="row">
                     <div class="offset2">
                         <p class="span3" style="padding-left:80px; margin-right:48px;"> Select your TV provider... </p>
-                        <select id='headends' onchange="getURL(this)" data-placeholder="Select your TV provider" class="chzn-select">
-                            <option>Over the Air Broadcast</option>
+                        <select id='headends' name='channels_url' data-placeholder="Select your TV provider" class="chzn-select">
+                            <option value=''>Over the Air Broadcast</option>
                             {% for he_name, channels_url in headends %}
-                                <option value={{ channels_url }}>{{ he_name }}</option>
+                                {% if selected_channels_url == channels_url %}
+                                    <option selected="selected" value={{ channels_url }}>{{ he_name }}</option>
+                                {% else %}
+                                    <option value={{ channels_url }}>{{ he_name }}</option>
+                                {% endif %}
                             {% endfor %}
                         </select>
                     </div>
