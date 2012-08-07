@@ -153,7 +153,6 @@ def zipcode_listings(request):
                         listings.append(callsigns)
             context['listings'] = listings
             context['selected_headend'] = selected_headend
-    print listings
     return render_to_response(
         'zipcode_listings.html',
         context,
@@ -194,14 +193,30 @@ def episode_listings(request):
         },
     ]
 
+    mock_headends = [
+        (
+            'DirecTV - Washington, DC',
+            'http://services-qa.pbs.org/channels/headend/105.json'),
+        (
+            'Broadcast TV - Wash, Dc(Hagrstwn)',
+            'http://services-qa.pbs.org/channels/headend/114.json'),
+        (
+            'Shaw Direct Advanced - Eastern Time Zone',
+            'http://services-qa.pbs.org/channels/headend/130.json')
+    ]
+
     context = {}
     if request.method == 'POST':
         zipcode = request.POST.get('zipcode')
         episode_url = request.POST.get('episode_url')
+        channels_url = request.POST.get('channels_url')
+
         context['zipcode'] = zipcode
         context['episode_url'] = episode_url
+        context['selected_channels_url'] = channels_url
+
         #TODO(severb): Populate headends by the given zip.
-        context['headends'] =  ['Comcast 1', 'Comcast 2']
+        context['headends'] =  mock_headends
         #TODO(severb): Extract ep title based on the input url.
         context['episode_title'] = 'Episode Title'
         #TODO(severb): Qurey sodor API to get real data.
