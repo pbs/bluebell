@@ -153,6 +153,7 @@ def zipcode_listings(request):
                         listings.append(callsigns)
             context['listings'] = listings
             context['selected_headend'] = selected_headend
+    print listings
     return render_to_response(
         'zipcode_listings.html',
         context,
@@ -161,7 +162,51 @@ def zipcode_listings(request):
 
 
 def episode_listings(request):
+
+    mock_listings = [
+        {'WETA': [
+            {'WETA TV':
+                ('0010', {'start_time': '1330', 'start_date': '20120807'})
+            },
+            {'WETA':
+                ('0237', {'start_time': '1430', 'start_date': '20120807'})
+            },
+            {'WMHT HDTV':
+                ('0088', {'start_time': '2000', 'start_date': '20120807'})
+            },
+            {'WETA UK':
+                ('0144', {'start_time': '1430', 'start_date': '20120807'})
+            },
+            {'WETA Kids':
+                ('0002', {'start_time': '1430', 'start_date': '20120807'})
+            }]
+        },
+        {'WMPB': [
+            {u'Maryland Public Television':
+                ('0012', {'start_time': '1500', 'start_date': '20120807'})
+            },
+            {u'MPT2':
+                ('0033', {'start_time': '1830', 'start_date': '20120807'})
+            },
+            {u'MPT HDTV':
+                ('0526', {'start_time': '1730', 'start_date': '20120807'})
+            }]
+        },
+    ]
+
     context = {}
+    if request.method == 'POST':
+        zipcode = request.POST.get('zipcode')
+        episode_url = request.POST.get('episode_url')
+        context['zipcode'] = zipcode
+        context['episode_url'] = episode_url
+        #TODO(severb): Populate headends by the given zip.
+        context['headends'] =  ['Comcast 1', 'Comcast 2']
+        #TODO(severb): Extract ep title based on the input url.
+        context['episode_title'] = 'Episode Title'
+        #TODO(severb): Qurey sodor API to get real data.
+        context['listings'] = mock_listings
+
     return render_to_response(
         'episode_listings.html',
         context,
