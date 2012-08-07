@@ -56,7 +56,7 @@ def localize_stations(request):
     )
 
 
-def show_listings(request):
+def zipcode_listings(request):
     context = {}
     listings = []
     headends_data = []
@@ -154,7 +154,16 @@ def show_listings(request):
             context['listings'] = listings
             context['selected_headend'] = selected_headend
     return render_to_response(
-        'show_listings.html',
+        'zipcode_listings.html',
+        context,
+        context_instance=RequestContext(request)
+    )
+
+
+def episode_listings(request):
+    context = {}
+    return render_to_response(
+        'episode_listings.html',
         context,
         context_instance=RequestContext(request)
     )

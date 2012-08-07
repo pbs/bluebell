@@ -1,0 +1,33 @@
+{% extends "base_nav.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container" style="padding-top: 23px;">
+        <form method='get' action='{% url bluebell.consumer.views.episode_listings %}'>
+            {% csrf_token %}
+            <div class="row">
+                <div class="span7 offset2" style="padding-left:40px;">
+                    <input name="zipcode" type="text" maxlength="5" style="height:26px; font-size: 16px; text-align:center;" value="{{ zipcode }}" required placeholder="Enter your zipcode...">
+                    <button type="submit" class="btn btn-large" style="margin-bottom:8px; margin-left:20px;"><i class="icon-road" style="margin-left:15px; margin-right:15px;"></i></button>
+                </div>
+                <div class="row">
+                    <div class="offset2">
+                        <p class="span3" style="padding-left:80px; margin-right:48px;"> Select your TV provider... </p>
+                        <select id='headends' name='channels_url' data-placeholder="Select your TV provider" class="chzn-select">
+                            <option value=''>Over the Air Broadcast</option>
+                            {% for he_name, channels_url in headends %}
+                                {% if selected_channels_url == channels_url %}
+                                    <option selected="selected" value={{ channels_url }}>{{ he_name }}</option>
+                                {% else %}
+                                    <option value={{ channels_url }}>{{ he_name }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="container" style="padding-top:6px;">
+            <div>
+        </form>
+    </div>
+{% endblock %}

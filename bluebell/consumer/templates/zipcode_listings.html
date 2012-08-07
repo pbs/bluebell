@@ -3,7 +3,7 @@
 
 {% block content %}
     <div class="container" style="padding-top: 23px;">
-        <form method='post' action='{% url bluebell.consumer.views.show_listings %}'>
+        <form method='post' action='{% url bluebell.consumer.views.zipcode_listings %}'>
             {% csrf_token %}
             <div class="row">
                 <div class="span7 offset2" style="padding-left:40px;">

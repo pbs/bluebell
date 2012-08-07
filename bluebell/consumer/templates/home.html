@@ -12,9 +12,12 @@
 
 {% block content %}
     <div class="container">
-        <div class="row offset2">
+        <div class="row offset3" style="padding:0 0 20px 60px;">
             <a class="span3 btn btn-large" href="{% url bluebell.consumer.views.localize_stations %}">Localize Stations<i style="margin-left: 15px;"class="icon-globe"></i></a>
-            <a class="span3 btn btn-large" href="{% url bluebell.consumer.views.show_listings %}">Show Listings<i style="margin-left: 15px;"class="icon-tasks"></i></a>
+        </div>
+        <div class="row offset2" style="padding-left:8px;">
+            <a class="span3 btn btn-large" href="{% url bluebell.consumer.views.zipcode_listings %}">Zipcode Listings<i style="margin-left: 15px;"class="icon-tasks"></i></a>
+            <a class="span3 btn btn-large" href="{% url bluebell.consumer.views.episode_listings %}">Episode Listings<i style="margin-left: 15px;"class="icon-tasks"></i></a>
         </div>
     </div>
 {% endblock %}
