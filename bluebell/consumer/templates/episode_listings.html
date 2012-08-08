@@ -52,16 +52,20 @@
                                                     <tr>
                                                         {% if selected_channels_url %}
                                                             {% with listing_data|slice:"1:" as sliced_data %}
-                                                                <td style="text-align:center; padding-top:8px; width:175px;">
-                                                                    <div style="font-weight:bold;">{{ sliced_data.0.start_time|slice:":2"}}:{{ sliced_data.0.start_time|slice:"2:"}}</div>
-                                                                    <div style="font-weight:bold;">{{ sliced_data.0.start_date|slice:"4:6" }}-{{ listing_data.start_date|slice:"6:8" }}-{{ sliced_data.0.start_date|slice:":4" }}</div>
-                                                                </td>
+                                                                {% for data in sliced_data %}
+                                                                    <td style="text-align:center; padding-top:8px; width:175px;">
+                                                                        <div style="font-weight:bold;">{{ data.start_time|slice:":2"}}:{{ data.start_time|slice:"2:"}}</div>
+                                                                        <div style="font-weight:bold;">{{ data.start_date|slice:"4:6" }}-{{ data.start_date|slice:"6:8" }}-{{ data.start_date|slice:":4" }}</div>
+                                                                    </td>
+                                                                {% endfor %}
                                                             {% endwith %}
                                                         {% else %}
-                                                            <td style="text-align:center; padding-top:8px; width:175px;">
-                                                                <div style="font-weight:bold;">{{ listing_data.start_time|slice:":2"}}:{{ listing_data.start_time|slice:"2:"}}</div>
-                                                                <div style="font-weight:bold;">{{ listing_data.start_date|slice:"4:6" }}-{{ listing_data.start_date|slice:"6:8" }}-{{ listing_data.start_date|slice:":4" }}</div>
-                                                            </td>
+                                                            {% for data in listing_data %}
+                                                                <td style="text-align:center; padding-top:8px; width:175px;">
+                                                                    <div style="font-weight:bold;">{{ data.start_time|slice:":2"}}:{{ data.start_time|slice:"2:"}}</div>
+                                                                    <div style="font-weight:bold;">{{ data.start_date|slice:"4:6" }}-{{ data.start_date|slice:"6:8" }}-{{ data.start_date|slice:":4" }}</div>
+                                                                </td>
+                                                            {% endfor %}
                                                         {% endif %}
                                                     </tr>
                                                     </table>

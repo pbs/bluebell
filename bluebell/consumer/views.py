@@ -165,30 +165,44 @@ def episode_listings(request):
     mock_listings = [
         {'WETA': [
             {'WETA TV':
-                {'start_time': '1330', 'start_date': '20120807'}
+                [
+                    {'start_time': '1330', 'start_date': '20120807'},
+                    {'start_time': '1830', 'start_date': '20120803'},
+                    {'start_time': '1830', 'start_date': '20120809'},
+                    {'start_time': '1830', 'start_date': '20120809'},
+                    {'start_time': '2100', 'start_date': '20120819'},
+                    {'start_time': '2230', 'start_date': '20120808'},
+                ]
             },
             {'WETA':
-                {'start_time': '1430', 'start_date': '20120807'}
+                [{'start_time': '1430', 'start_date': '20120807'},]
             },
             {'WMHT HDTV':
-                {'start_time': '2000', 'start_date': '20120807'}
+                [{'start_time': '2000', 'start_date': '20120807'},]
             },
             {'WETA UK':
-                {'start_time': '1430', 'start_date': '20120807'}
+                [{'start_time': '1430', 'start_date': '20120807'},]
             },
             {'WETA Kids':
-                {'start_time': '1430', 'start_date': '20120807'}
+                [{'start_time': '1430', 'start_date': '20120807'},]
             }]
         },
         {'WMPB': [
             {u'Maryland Public Television':
-                {'start_time': '1500', 'start_date': '20120807'}
+                [
+                    {'start_time': '1500', 'start_date': '20120807'},
+                    {'start_time': '1830', 'start_date': '20120803'},
+                    {'start_time': '1830', 'start_date': '20120809'},
+                    {'start_time': '1830', 'start_date': '20120809'},
+                    {'start_time': '2100', 'start_date': '20120819'},
+                    {'start_time': '2230', 'start_date': '20120808'},
+                ]
             },
             {u'MPT2':
-                {'start_time': '1830', 'start_date': '20120807'}
+                [{'start_time': '1830', 'start_date': '20120807'},]
             },
             {u'MPT HDTV':
-                {'start_time': '1730', 'start_date': '20120807'}
+                [{'start_time': '1730', 'start_date': '20120807'},]
             }]
         },
     ]
@@ -196,30 +210,35 @@ def episode_listings(request):
     mock_channel_listings = [
         {'WETA': [
             {'WETA TV':
-                ('0010', {'start_time': '1330', 'start_date': '20120807'})
+                ['0010',
+                    {'start_time': '2330', 'start_date': '20120807'},
+                    {'start_time': '1400', 'start_date': '20120807'},
+                    {'start_time': '1030', 'start_date': '20120807'},
+                    {'start_time': '2100', 'start_date': '20120807'},
+                ]
             },
             {'WETA':
-                ('0237', {'start_time': '1430', 'start_date': '20120807'})
+                ['0237', {'start_time': '1430', 'start_date': '20120807'}]
             },
             {'WMHT HDTV':
-                ('0088', {'start_time': '2000', 'start_date': '20120807'})
+                ['0088', {'start_time': '2000', 'start_date': '20120807'}]
             },
             {'WETA UK':
-                ('0144', {'start_time': '1430', 'start_date': '20120807'})
+                ['0144', {'start_time': '1430', 'start_date': '20120807'}]
             },
             {'WETA Kids':
-                ('0002', {'start_time': '1430', 'start_date': '20120807'})
+                ['0002', {'start_time': '1430', 'start_date': '20120807'}]
             }]
         },
         {'WMPB': [
             {u'Maryland Public Television':
-                ('0012', {'start_time': '1500', 'start_date': '20120807'})
+                ['0012', {'start_time': '1500', 'start_date': '20120807'}]
             },
             {u'MPT2':
-                ('0033', {'start_time': '1830', 'start_date': '20120807'})
+                ['0033', {'start_time': '1830', 'start_date': '20120807'}]
             },
             {u'MPT HDTV':
-                ('0526', {'start_time': '1730', 'start_date': '20120807'})
+                ['0526', {'start_time': '1730', 'start_date': '20120807'}]
             }]
         },
     ]
