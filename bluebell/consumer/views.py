@@ -165,6 +165,37 @@ def episode_listings(request):
     mock_listings = [
         {'WETA': [
             {'WETA TV':
+                {'start_time': '1330', 'start_date': '20120807'}
+            },
+            {'WETA':
+                {'start_time': '1430', 'start_date': '20120807'}
+            },
+            {'WMHT HDTV':
+                {'start_time': '2000', 'start_date': '20120807'}
+            },
+            {'WETA UK':
+                {'start_time': '1430', 'start_date': '20120807'}
+            },
+            {'WETA Kids':
+                {'start_time': '1430', 'start_date': '20120807'}
+            }]
+        },
+        {'WMPB': [
+            {u'Maryland Public Television':
+                {'start_time': '1500', 'start_date': '20120807'}
+            },
+            {u'MPT2':
+                {'start_time': '1830', 'start_date': '20120807'}
+            },
+            {u'MPT HDTV':
+                {'start_time': '1730', 'start_date': '20120807'}
+            }]
+        },
+    ]
+
+    mock_channel_listings = [
+        {'WETA': [
+            {'WETA TV':
                 ('0010', {'start_time': '1330', 'start_date': '20120807'})
             },
             {'WETA':
@@ -220,7 +251,10 @@ def episode_listings(request):
         #TODO(severb): Extract ep title based on the input url.
         context['episode_title'] = 'Episode Title'
         #TODO(severb): Qurey sodor API to get real data.
-        context['listings'] = mock_listings
+        if channels_url:
+            context['listings'] = mock_channel_listings
+        else:
+            context['listings'] = mock_listings
 
     return render_to_response(
         'episode_listings.html',

@@ -28,6 +28,55 @@
                 </div>
             </div>
             <div class="container" style="padding-top:6px;">
+                {% if listings %}
+                    <table class="table table-bordered" style="width:940px;">
+                        {% for callsigns in listings %}
+                            <tr>
+                            {% for callsign, feeds in callsigns.items %}
+                                <th style="text-align:center; width:100px; vertical-align:middle; color:#005580;">
+                                    {{ callsign }}
+                                </th>
+                                <td style="padding-top:22px;">
+                                    <table class="table table-bordered" style="width:840px;">
+                                    {% for feed in feeds %}
+                                        {% for feed_name, listing_data in feed.items %}
+                                            <tr>
+                                                <th style="text-align: center; vertical-align:middle; width:140px; color:#C09853;">
+                                                    <div>{{ feed_name }}</div>
+                                                    {% if selected_channels_url %}
+                                                        <p style="color:#333;">{{ listing_data.0 }}</p>
+                                                    {% endif %}
+                                                </th>
+                                                <td style="padding-top:22px;">
+                                                    <table class="table table-bordered table-striped" style="width:700px;">
+                                                    <tr>
+                                                        {% if selected_channels_url %}
+                                                            {% with listing_data|slice:"1:" as sliced_data %}
+                                                                <td style="text-align:center; padding-top:8px; width:175px;">
+                                                                    <div style="font-weight:bold;">{{ sliced_data.0.start_time|slice:":2"}}:{{ sliced_data.0.start_time|slice:"2:"}}</div>
+                                                                    <div style="font-weight:bold;">{{ sliced_data.0.start_date|slice:"4:6" }}-{{ listing_data.start_date|slice:"6:8" }}-{{ sliced_data.0.start_date|slice:":4" }}</div>
+                                                                </td>
+                                                            {% endwith %}
+                                                        {% else %}
+                                                            <td style="text-align:center; padding-top:8px; width:175px;">
+                                                                <div style="font-weight:bold;">{{ listing_data.start_time|slice:":2"}}:{{ listing_data.start_time|slice:"2:"}}</div>
+                                                                <div style="font-weight:bold;">{{ listing_data.start_date|slice:"4:6" }}-{{ listing_data.start_date|slice:"6:8" }}-{{ listing_data.start_date|slice:":4" }}</div>
+                                                            </td>
+                                                        {% endif %}
+                                                    </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% endfor %}
+                                    </table>
+                                </td>
+                            {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% endif %}
+            <div>
             <div>
         </form>
     </div>
