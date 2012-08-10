@@ -145,7 +145,7 @@ LOGGING = {
     }
 }
 
-SODOR_ENDPOINT = 'http://services-qa.pbs.org'
+SODOR_ENDPOINT = 'http://sever-ubuntu:8000/'
 
 try:
     from settings_local import *

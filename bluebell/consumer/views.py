@@ -161,37 +161,113 @@ def zipcode_listings(request):
     )
 
 
+def get_headends_for_zipcode(zipcode):
+    homepage = client.load(settings.SODOR_ENDPOINT)
+    zipcodes = homepage.service('zipcodes')
+    zipcode = zipcodes.filter('zip', zipcode=zipcode).items()[0]
+    headends = zipcode.related('presence')
+    return [(h.content.name, h.self) for h in headends.items()]
+
+
+def get_feeds_for_headend(headend_url):
+    headend = client.load(headend_url)
+    result = {}
+    for channel in headend.related('children').items():
+        cable_number = channel.content.cable_number
+        feed = channel.related('related')
+        full_name = feed.related('summary').content.full_name
+        callsign = feed.related('parent').content.callsign
+        result[feed.self] = [cable_number, full_name, callsign]
+    return result
+
+
+def get_feeds_for_zipcode(zipcode):
+    result = {}
+    homepage = client.load(settings.SODOR_ENDPOINT)
+    zipcodes = homepage.service('zipcodes')
+    zipcode = zipcodes.filter('zip', zipcode=zipcode).items()[0]
+    cs2zipm = zipcode.related('search')
+    for cs2zip in cs2zipm.items():
+        cs = cs2zip.related('related')
+        callsign = cs.content.callsign
+        for feed in cs.related('children').items():
+            feed_url = feed.self
+            ota = feed.related('summary')
+            full_name = ota.content.full_name
+            result[feed_url] = [full_name, callsign]
+    return result
+
+
+def get_episode_listings(episode_url):
+    result = {}
+    episode = client.load(episode_url)
+    listings = episode.related('related')
+    for listing in listings.items():
+        feed_url = listing.related('parent').self
+        result.setdefault(feed_url, []).append({
+            'start_date': listing.content.start_date,
+            'start_time': listing.content.start_time,
+        })
+    return result
+
+
 def episode_listings(request):
-    current_dir = os.path.dirname(
-        os.path.normpath(os.sys.modules[settings.SETTINGS_MODULE].__file__)
-    )
-    mock_file = open(
-        os.path.join(current_dir, "consumer/fixtures/mock_ep_data.json")
-    )
-    data = json.loads(mock_file.read())
-    mock_listings = data['mock_listings']
-    mock_channel_listings = data['mock_channel_listings']
-    mock_headends = data['mock_headends']
+#     current_dir = os.path.dirname(
+#         os.path.normpath(os.sys.modules[settings.SETTINGS_MODULE].__file__)
+#     )
+#     mock_file = open(
+#         os.path.join(current_dir, "consumer/fixtures/mock_ep_data.json")
+#     )
+#    data = json.loads(mock_file.read())
+#    mock_listings = data['mock_listings']
+#     mock_headends = data['mock_headends']
 
     context = {}
     if request.method == 'POST':
         zipcode = request.POST.get('zipcode')
         episode_url = request.POST.get('episode_url')
-        channels_url = request.POST.get('channels_url')
+        headend_url = request.POST.get('channels_url')
 
         context['zipcode'] = zipcode
         context['episode_url'] = episode_url
-        context['selected_channels_url'] = channels_url
+        context['selected_channels_url'] = headend_url
 
-        #TODO(severb): Populate headends by the given zip.
-        context['headends'] =  mock_headends
-        #TODO(severb): Extract ep title based on the input url.
-        context['episode_title'] = 'Episode Title'
-        #TODO(severb): Qurey sodor API to get real data.
-        if channels_url:
-            context['listings'] = mock_channel_listings
+        context['headends'] = get_headends_for_zipcode(zipcode)
+        context['episode_title'] = client.load(episode_url).content.title
+
+        if headend_url:
+            headend_feeds = get_feeds_for_headend(headend_url)
+            all_listings = get_episode_listings(episode_url)
+
+            common_feeds = set(headend_feeds.keys()) & set(all_listings.keys())
+
+            d = {}
+            for feed_url in common_feeds:
+                l = d.setdefault(headend_feeds[feed_url][2], [])
+                l.append({
+                    headend_feeds[feed_url][1]:
+                    [headend_feeds[feed_url][0]] + all_listings[feed_url]
+                })
+
+            context['listings'] = [
+                {cs: the_rest} for cs, the_rest in d.items()
+            ]
         else:
-            context['listings'] = mock_listings
+            ota_feeds = get_feeds_for_zipcode(zipcode)
+            all_listings = get_episode_listings(episode_url)
+
+            common_feeds = set(ota_feeds.keys()) & set(all_listings.keys())
+
+            d = {}
+            for feed_url in common_feeds:
+                l = d.setdefault(ota_feeds[feed_url][1], [])
+                l.append({
+                    ota_feeds[feed_url][0]: all_listings[feed_url]
+                })
+
+            context['listings'] = [
+                {cs: the_rest} for cs, the_rest in d.items()
+            ]
 
     return render_to_response(
         'episode_listings.html',
