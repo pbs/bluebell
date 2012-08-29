@@ -1,0 +1,52 @@
+{% extends "base_nav.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+    <h1>Feed: {{OTAChannel.full_name}}</h1>
+
+    <table class="table table-bordered table-condensed">
+        <tbody>
+            <tr>
+                <td>Short Name</td>
+                <td>{{OTAChannel.short_name}}</td>
+            </tr><tr>
+                <td>Location</td>
+                <td>{{OTAChannel.city}}, {{OTAChannel.state}}</td>
+            </tr><tr>
+                <td>TimeZone</td>
+                <td>{{OTAChannel.timezone}}</td>
+            </tr><tr>
+                <td>Station Short Name</td>
+                <td><a href='{% url view-station Station_id %}'>{{Station.short_common_name}}</a></td>
+            </tr><tr>
+                <td>Station Common Name</td>
+                <td><a href='{% url view-station Station_id %}'>{{Station.common_name}}</a></td>
+            </tr><tr>
+                <td>Feed URL</td>
+                <td>{{Feed.self}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <h1>Listings for Today</h1>
+    <table class="table table-bordered table-condensed">
+        <thead>
+            <td>Start Time</td>
+            <td>Program</td>
+            <td>Episode Title</td>
+            <td>Description</td>
+        </thead>
+        <tbody>
+        {% for listing in Listings %}
+            <tr>
+                <td>{{listing.info.start_time}}</td>
+                <td>{{listing.program.title}}</td>
+                <td>{{listing.episode.title}}</td>
+                <td>{{listing.episode.description}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

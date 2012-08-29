@@ -2,9 +2,11 @@ import os
 import re
 import json
 import urllib
+import datetime
 from django.conf import settings
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.http import HttpResponse, HttpResponseNotFound
 
 from bluebell.consumer.extractor import (
     get_localization_callsigns_data,
@@ -294,3 +296,68 @@ def _read_data(url):
         return None
     else:
         return response
+
+def feed_listings(request,feed_id,target_date=None):
+    ''' Show listings for one day - default date is today'''
+    #feed_url ='http://services-qa.pbs.org/feed/913.json'
+    feed_url = settings.SODOR_ENDPOINT + 'feed/' + str(int(feed_id)) + '.json'
+    context = {}
+    try:
+        feed_data = client.load(feed_url)
+    except KeyError:
+        return HttpResponseNotFound('Feed not found')
+
+    # example query on object:
+    # >> city = feed_data.related('summary').content.city
+    # >> print city
+    # u'Washington'
+    #
+    callsign = feed_data.related('parent')
+    station_data = callsign.related('parent')
+
+    context['OTAChannel'] = feed_data.related('summary').content
+    context['Station'] = station_data.content
+    s_url = station_data.self
+    context['Station_id'] = s_url[s_url.rfind('/')+1:-5]
+    context['Feed'] = feed_data.content
+    context['Feed_link'] = feed_data.self
+
+    listing_data = []
+    if not target_date:
+        target_date = datetime.datetime.today().strftime("%Y%m%d")
+    listings = feed_data.related('children')
+    for listing in listings.filter('date', date=target_date).items():
+        l = {}
+        episode = listing.related('related')
+        l['info'] = listing.content
+        l['episode'] = episode.content
+        # TODO: Fix bug when this is uncommented
+        #program = episode.related('parent')
+        #l['program'] = program.content
+
+        listing_data.append(l)
+
+    context['Listings'] = listing_data
+
+    return render_to_response(
+        'feed_listings.html',
+        context,
+        context_instance=RequestContext(request)
+    )
+
+def view_station(request,station_id):
+
+    station_url = settings.SODOR_ENDPOINT + 'station/' + str(int(station_id)) + '.json'
+    context = {}
+    try:
+        station_data = client.load(station_url)
+    except KeyError:
+        return HttpResponseNotFound('Station not found')
+
+    context['station'] = station_data.content
+
+    return render_to_response(
+        'view_station.html',
+        context,
+        context_instance=RequestContext(request)
+    )

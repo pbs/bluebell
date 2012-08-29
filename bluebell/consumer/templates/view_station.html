@@ -1,0 +1,20 @@
+{% extends "base_nav.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+    <h1>Station: {{station.common_name}}</h1>
+
+    <table class="table table-bordered table-condensed">
+        <tbody>
+            <tr>
+                <td>Station Short Name</td>
+                <td>{{station.short_common_name}}</a></td>
+            </tr><tr>
+                <td>Station Common Name</td>
+                <td>{{station.common_name}}</a></td>
+            </tr>
+        </tbody>
+</div>
+{% endblock %}
