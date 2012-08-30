@@ -6,13 +6,16 @@ def get_localization_callsigns_data(callsign_by_zip_data, zipcode):
         return
     for item in callsign_by_zip_data['$items']:
         scn = item['$links'][0]['$links'][0]['short_common_name']
+        stn_url = item['$links'][0]['$links'][0]['$self']
+        stn_id = int(stn_url[stn_url.rfind('/')+1:-5])
         ztc_data.append({scn: {
             'short_common_name': scn,
             'flagship':
                 item['$links'][0]['$links'][0]['$links'][1]['callsign'],
             'confidence': item['confidence'],
             'rank': item['rank'],
-            'callsign': item['$links'][0]['callsign']}
+            'callsign': item['$links'][0]['callsign'],
+            'station_id' : stn_id }
         })
     return _group_callsign_data(ztc_data)
 

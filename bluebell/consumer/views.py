@@ -356,6 +356,19 @@ def view_station(request,station_id):
 
     context['station'] = station_data.content
 
+    flagship = station_data.related('flagship')
+    primary_feeds = flagship.related('children')
+    feeds = []
+    for f in primary_feeds.items():
+        f_url = f.self
+        f_id = f_url[f_url.rfind('/')+1:-5]
+        feed_obj = {}
+        feed_obj['id'] = f_id
+        otc = f.related('summary').content
+        feed_obj['otc'] = otc
+        feeds.append(feed_obj)
+    context['feeds'] = feeds
+
     return render_to_response(
         'view_station.html',
         context,

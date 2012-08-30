@@ -10,11 +10,34 @@
         <tbody>
             <tr>
                 <td>Station Short Name</td>
-                <td>{{station.short_common_name}}</a></td>
+                <td>{{station.short_common_name}}</td>
             </tr><tr>
                 <td>Station Common Name</td>
-                <td>{{station.common_name}}</a></td>
+                <td>{{station.common_name}}</td>
+            </tr><tr>
+                <td>City</td>
+                <td>{{station.mailing_city}}, {{station.mailing_state}}</td>
             </tr>
         </tbody>
+    </table>
+    <h1>Feeds</h1>
+    <table class="table table-bordered table-condensed">
+        <thead>
+            <tr>
+                <td>Feed Short Name</td>
+                <td>Feed Full Name</td>
+                <td>Time Zone</td>
+        </thead>
+        <tbody>
+            {% for f in feeds %}
+            <tr>
+                <td><a href='{% url feed-listings f.id %}'>{{ f.otc.short_name }}</a></td>
+                <td><a href='{% url feed-listings f.id %}'>{{ f.otc.full_name }}</a></td>
+                <td>{{ f.otc.timezone }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
 </div>
 {% endblock %}
