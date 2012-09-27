@@ -16,7 +16,7 @@ from bluebell.consumer.extractor import (
 )
 
 from resty import client
-
+import requests
 
 def home(request):
     return render_to_response('home.html', {})
@@ -148,6 +148,10 @@ def zipcode_listings(request):
                             listings_data = _get_listings_by_date(
                                 filter_url, url_date_format, time
                             )
+
+                            #import pdb; pdb.set_trace()
+
+
                             if listings_data:
                                 feeds.setdefault(feed_name, []).extend(
                                     listings_data)
@@ -297,7 +301,8 @@ def _read_data(url):
     else:
         return response
 
-def feed_listings(request,feed_id,target_date=None):
+def listings(request,callsign,target_date=None):
+
     ''' Show listings for one day - default date is today'''
     #feed_url ='http://services-qa.pbs.org/feed/913.json'
     feed_url = settings.SODOR_ENDPOINT + 'feed/' + str(int(feed_id)) + '.json'
@@ -332,8 +337,8 @@ def feed_listings(request,feed_id,target_date=None):
         l['info'] = listing.content
         l['episode'] = episode.content
         # TODO: Fix bug when this is uncommented
-        #program = episode.related('parent')
-        #l['program'] = program.content
+        program = episode.related('parent')
+        l['program'] = program.content
 
         listing_data.append(l)
 
@@ -357,6 +362,7 @@ def view_station(request,station_id):
     context['station'] = station_data.content
 
     flagship = station_data.related('flagship')
+    context['flagship_callsign'] = flagship.content.callsign
     primary_feeds = flagship.related('children')
     feeds = []
     for f in primary_feeds.items():
@@ -369,8 +375,54 @@ def view_station(request,station_id):
         feeds.append(feed_obj)
     context['feeds'] = feeds
 
+    # http://services-qa.pbs.org/tvss/today/wmpb/
+    whats_on_today_url = settings.SODOR_ENDPOINT + 'tvss/today/' + flagship.content.callsign
+
+    data = requests.get(whats_on_today_url)
+    if data.status_code == 200:
+        context['listings_today'] = data.json
+
     return render_to_response(
         'view_station.html',
         context,
         context_instance=RequestContext(request)
     )
+
+def view_program(request, program_id, callsign):
+    #
+    # http://services-qa.pbs.org/tvss/upcoming/program/752/weta/
+    #
+    program_url = settings.SODOR_ENDPOINT + 'tvss/upcoming/program/' + str(int(program_id)) + '/' + callsign + '/'
+    context = {}
+
+    data = requests.get(program_url)
+    if data.status_code == 200:
+        context['program'] = data.json
+
+    return render_to_response(
+        'view_program.html',
+        context,
+        context_instance=RequestContext(request)
+    )
+
+def view_show(request, show_id, callsign):
+    #
+    # http://services-qa.pbs.org/tvss/upcoming/show/episode_9509/weta/
+    #
+    show_url = settings.SODOR_ENDPOINT + 'tvss/upcoming/show/' + str(int(program_id)) + '/' + callsign + '/'
+    context = {}
+
+    data = requests.get(show_url)
+    if data.status_code == 200:
+        context['show'] = data.json
+
+    context['callsign'] = callsign
+
+    return render_to_response(
+        'view_show.html',
+        context,
+        context_instance=RequestContext(request)
+    )
+
+
+

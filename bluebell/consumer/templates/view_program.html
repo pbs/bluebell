@@ -1,0 +1,36 @@
+{% extends "base_nav.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+    <h1>Program: {{program.title}}</h1>
+    <p class='lead'>
+    {{ program.description }}
+    </p>
+    <h3>Upcoming Episodes</h3>
+    <table class="table table-bordered table-condensed">
+            <tbody>
+                {% for upe in program.upcoming_episodes %}
+                <tr>
+                    <td>
+                        <b>Time:</b> {{ upe.day }} at {{ upe.start_time }}<br>
+                        {% if upe.episode_title %}
+                            <b>Episode Title:</b> {{ upe.episode_title }}<br>
+                            <b>Episode Description:</b>{{ upe.episode_description }}<br>
+                        {% endif %}
+                        <b>Duration:</b> {{ upe.minutes }} minutes<br>
+                        Broadcast on <b>{{ upe.feed.full_name }}</b>
+                        {% if upe.feed.analog_channel %}
+                            (Channel {{ upe.feed.analog_channel}})
+                        {% else %}
+                            (Channel {{ upe.feed.digital_channel}})
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+</div>
+{% endblock %}

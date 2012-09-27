@@ -31,13 +31,46 @@
         <tbody>
             {% for f in feeds %}
             <tr>
-                <td><a href='{% url feed-listings f.id %}'>{{ f.otc.short_name }}</a></td>
-                <td><a href='{% url feed-listings f.id %}'>{{ f.otc.full_name }}</a></td>
+                <td><a href='{% url listings flagship_callsign %}'>{{ f.otc.short_name }}</a></td>
+                <td><a href='{% url listings flagship_callsign %}'>{{ f.otc.full_name }}</a></td>
                 <td>{{ f.otc.timezone }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    <h1>What's on Right Now</h1>
+    <div class="row">
+    {% for f in listings_today.feeds %}
+        <div class="span3">
+        <h3>{{f.full_name}}</h3>
+        {% if f.analog_channel %}
+            Analog Channel {{ f.analog_channel }}
+        {% else %}
+            Digital Channel {{ f.digital_channel }}
+        {% endif %}
+        <table class="table table-bordered table-condensed">
+            <thead>
+                <td>Time</td>
+                <td>Listing</td>
+            </thead>
+            <tbody>
+            {% for listing in f.listings %}
+                <tr>
+                    <td>{{listing.start_time}}</td>
+                    {% if listing.program_id %}
+                    <td><b><a href='{% url view-program listing.program_id flagship_callsign %}'>{{listing.title}}</a></b><br>
+                    {% endif %}
+                    {% if listing.episode_title %}
+                        <i>{{listing.episode_title}}</i><br>
+                    {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    {% endfor %}
+    </div>
 
 </div>
 {% endblock %}
