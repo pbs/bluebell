@@ -4,14 +4,25 @@
 {% block content %}
 
 <div class="container">
-    <h1>Program: {{program.title}}</h1>
+    {% if show.episode_title %}
+        <h1>{{ show.episode_title }}</h1>
+    {% else %}
+        <h1>{{show.title}}</h1>
+    {% endif %}
     <p class='lead'>
-    {{ program.description }}
+    {% if show.episode_description %}
+        {{ show.episode_description }}
+    {% else %}
+        {{ show.description }}
+    {% endif %}
     </p>
-    <h3>Upcoming Episodes</h3>
+    {% if show.program_id %}
+        <p>Program: <a href='{% url view-program show.program_id callsign %}'>{{ show.title }}</a>
+    {% endif %}
+    <h3>Upcoming Showings</h3>
     <table class="table table-bordered table-condensed">
             <tbody>
-                {% for upe in program.upcoming_episodes %}
+                {% for upe in show.upcoming_shows %}
                 <tr>
                     <td>
                         <b>Time:</b> {{ upe.day }} at {{ upe.start_time }}<br>

@@ -399,6 +399,8 @@ def view_program(request, program_id, callsign):
     if data.status_code == 200:
         context['program'] = data.json
 
+    context['callsign'] = callsign
+
     return render_to_response(
         'view_program.html',
         context,
@@ -409,7 +411,7 @@ def view_show(request, show_id, callsign):
     #
     # http://services-qa.pbs.org/tvss/upcoming/show/episode_9509/weta/
     #
-    show_url = settings.SODOR_ENDPOINT + 'tvss/upcoming/show/' + str(int(program_id)) + '/' + callsign + '/'
+    show_url = settings.SODOR_ENDPOINT + 'tvss/upcoming/show/' + show_id + '/' + callsign + '/'
     context = {}
 
     data = requests.get(show_url)
