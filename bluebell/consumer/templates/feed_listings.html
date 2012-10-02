@@ -4,49 +4,93 @@
 {% block content %}
 
 <div class="container">
-    <h1>Feed: {{OTAChannel.full_name}}</h1>
+    <h1>TV Schedule Grid for {{ callsign }}</h1>
 
     <table class="table table-bordered table-condensed">
-        <tbody>
-            <tr>
-                <td>Short Name</td>
-                <td>{{OTAChannel.short_name}}</td>
-            </tr><tr>
-                <td>Location</td>
-                <td>{{OTAChannel.city}}, {{OTAChannel.state}}</td>
-            </tr><tr>
-                <td>TimeZone</td>
-                <td>{{OTAChannel.timezone}}</td>
-            </tr><tr>
-                <td>Station Short Name</td>
-                <td><a href='{% url view-station Station_id %}'>{{Station.short_common_name}}</a></td>
-            </tr><tr>
-                <td>Station Common Name</td>
-                <td><a href='{% url view-station Station_id %}'>{{Station.common_name}}</a></td>
-            </tr><tr>
-                <td>Feed URL</td>
-                <td>{{Feed.self}}</td>
-            </tr>
-        </tbody>
-    </table>
-    <h1>Listings for Today</h1>
-    <table class="table table-bordered table-condensed">
         <thead>
-            <td>Start Time</td>
-            <td>Program</td>
-            <td>Episode Title</td>
-            <td>Description</td>
+            <td>Channel Name</td>
+            <td>Midnight</td>
+            <td>12:30am</td>
+            <td>1:00 AM</td>
+            <td>1:30 AM</td>
+            <td>2:00 AM</td>
+            <td>2:30 AM</td>
+            <td>3:00 AM</td>
+            <td>3:30 AM</td>
+            <td>4:00 AM</td>
+            <td>4:30 AM</td>
+            <td>5:00 AM</td>
+            <td>5:30 AM</td>
+            <td>6:00 AM</td>
+            <td>6:30 AM</td>
+            <td>7:00 AM</td>
+            <td>7:30 AM</td>
+            <td>8:00 AM</td>
+            <td>8:30 AM</td>
+            <td>9:00 AM</td>
+            <td>9:30 AM</td>
+            <td>10:00 AM</td>
+            <td>10:30 AM</td>
+            <td>11:00 AM</td>
+            <td>11:30 AM</td>
+            <td>12:00 PM</td>
+            <td>12:30 PM</td>
+            <td>1:00 PM</td>
+            <td>1:30 PM</td>
+            <td>2:00 PM</td>
+            <td>2:30 PM</td>
+            <td>3:00 PM</td>
+            <td>3:30 PM</td>
+            <td>4:00 PM</td>
+            <td>4:30 PM</td>
+            <td>5:00 PM</td>
+            <td>5:30 PM</td>
+            <td>6:00 PM</td>
+            <td>6:30 PM</td>
+            <td>7:00 PM</td>
+            <td>7:30 PM</td>
+            <td>8:00 PM</td>
+            <td>8:30 PM</td>
+            <td>9:00 PM</td>
+            <td>9:30 PM</td>
+            <td>10:00 PM</td>
+            <td>10:30 PM</td>
+            <td>11:00 PM</td>
+            <td>11:30 PM</td>
         </thead>
         <tbody>
-        {% for listing in Listings %}
+        {% for feed in listings.feeds %}
             <tr>
-                <td>{{listing.info.start_time}}</td>
-                <td>{{listing.program.title}}</td>
-                <td>{{listing.episode.title}}</td>
-                <td>{{listing.episode.description}}</td>
+                <td>{{ feed.short_name}}</td>
+                {% for l in feed.listings %}
+                <td colspan={{l.colspan}}>
+                    <b>
+                    {% if l.program_id %}
+                    <a href='{% url view-program l.program_id callsign %}'>{{l.title}}</a>
+                    {% else %}
+                    {{ l.title }}
+                    {% endif %}
+                    </b><br>
+                    {% if l.episode_title %}
+                        <i>{{l.episode_title}}</i><br>
+                    {% endif %}
+                    {% if l.episode_description %}
+                        <div class='listing-desc' title="{{l.episode_description}}">More...
+                        </div>
+                    {% else %}
+                        <div class='listing-desc' title="{{l.description}}">More...
+                        </div>
+                    {% endif %}
+                </td>
+                {% endfor %}
             </tr>
         {% endfor %}
         </tbody>
     </table>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.listing-desc').tooltip()
+    }
+</script>
 {% endblock %}

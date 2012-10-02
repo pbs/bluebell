@@ -56,7 +56,7 @@
             <tbody>
             {% for listing in f.listings %}
                 <tr>
-                    <td>{{listing.start_time}}</td>
+                    <td>{{listing.start_time_obj|time:'h:i A'}}</td>
                     {% if listing.program_id %}
                     <td><b><a href='{% url view-program listing.program_id flagship_callsign %}'>{{listing.title}}</a></b><br>
                     {% endif %}

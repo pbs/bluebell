@@ -25,7 +25,7 @@
                 {% for upe in show.upcoming_shows %}
                 <tr>
                     <td>
-                        <b>Time:</b> {{ upe.day }} at {{ upe.start_time }}<br>
+                        <b>Time:</b> {{ upe.day_obj|date:'l, M d' }} at {{ upe.start_time_obj|time:'h:i A' }}<br>
                         {% if upe.episode_title %}
                             <b>Episode Title:</b> {{ upe.episode_title }}<br>
                             <b>Episode Description:</b>{{ upe.episode_description }}<br>

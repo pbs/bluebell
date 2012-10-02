@@ -7,6 +7,7 @@ from django.conf import settings
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseNotFound
+from dateutil import parser
 
 from bluebell.consumer.extractor import (
     get_localization_callsigns_data,
@@ -303,52 +304,46 @@ def _read_data(url):
 
 def listings(request,callsign,target_date=None):
 
-    ''' Show listings for one day - default date is today'''
-    #feed_url ='http://services-qa.pbs.org/feed/913.json'
-    feed_url = settings.SODOR_ENDPOINT + 'feed/' + str(int(feed_id)) + '.json'
-    context = {}
-    try:
-        feed_data = client.load(feed_url)
-    except KeyError:
-        return HttpResponseNotFound('Feed not found')
-
-    # example query on object:
-    # >> city = feed_data.related('summary').content.city
-    # >> print city
-    # u'Washington'
-    #
-    callsign = feed_data.related('parent')
-    station_data = callsign.related('parent')
-
-    context['OTAChannel'] = feed_data.related('summary').content
-    context['Station'] = station_data.content
-    s_url = station_data.self
-    context['Station_id'] = s_url[s_url.rfind('/')+1:-5]
-    context['Feed'] = feed_data.content
-    context['Feed_link'] = feed_data.self
-
-    listing_data = []
     if not target_date:
-        target_date = datetime.datetime.today().strftime("%Y%m%d")
-    listings = feed_data.related('children')
-    for listing in listings.filter('date', date=target_date).items():
-        l = {}
-        episode = listing.related('related')
-        l['info'] = listing.content
-        l['episode'] = episode.content
-        # TODO: Fix bug when this is uncommented
-        program = episode.related('parent')
-        l['program'] = program.content
+        target_date = datetime.datetime.now().strftime("%Y%m%d")
 
-        listing_data.append(l)
+    # http://services-qa.pbs.org/tvss/day/20121002/weta/
+    #
+    listings_url = settings.SODOR_ENDPOINT + 'tvss/day/' + target_date + '/' + callsign + '/'
+    context = {}
 
-    context['Listings'] = listing_data
+    data = requests.get(listings_url)
+    if data.status_code == 200:
+        jd = data.json
+        # have to loop through and covert the goofy timestamps into datetime objects
+        for f in jd['feeds']:
+            # check the first listing in the list.  if it doesn't start at midnight
+            # then we have to add padding
+            first_time = f['listings'][0]['start_time']
+            if first_time != '0000':
+                time_delta_min = int(first_time[:2]) * 60 + int(first_time[2:])
+                dummy = {}
+                dummy['title'] = ""
+                dummy['start_time'] = '0000'
+                dummy['minutes'] = time_delta_min
+                f['listings'].insert(0,dummy)
+            for l in f['listings']:
+                l['start_time_obj'] = datetime.datetime.strptime(l['start_time'], "%H%M")
+                d,rem = divmod(int(l['minutes']),30)
+                if 1 > d:
+                    d = 1
+                l['colspan'] = d
+        context['listings'] = jd
+
+    context['callsign'] = callsign
 
     return render_to_response(
         'feed_listings.html',
         context,
         context_instance=RequestContext(request)
     )
+
+
 
 def view_station(request,station_id):
 
@@ -380,7 +375,12 @@ def view_station(request,station_id):
 
     data = requests.get(whats_on_today_url)
     if data.status_code == 200:
-        context['listings_today'] = data.json
+        jd = data.json
+        # have to loop through and covert the goofy timestamps into datetime objects
+        for f in jd['feeds']:
+            for l in f['listings']:
+                l['start_time_obj'] = datetime.datetime.strptime(l['start_time'], "%H%M")
+        context['listings_today'] = jd
 
     return render_to_response(
         'view_station.html',
@@ -397,7 +397,12 @@ def view_program(request, program_id, callsign):
 
     data = requests.get(program_url)
     if data.status_code == 200:
-        context['program'] = data.json
+        jd = data.json
+        # have to loop through and covert the goofy timestamps into datetime objects
+        for l in jd['upcoming_episodes']:
+            l['day_obj'] = parser.parse(l['day'])
+            l['start_time_obj'] = datetime.datetime.strptime(l['start_time'], "%H%M")
+        context['program'] = jd
 
     context['callsign'] = callsign
 
@@ -416,7 +421,12 @@ def view_show(request, show_id, callsign):
 
     data = requests.get(show_url)
     if data.status_code == 200:
-        context['show'] = data.json
+        jd = data.json
+        # have to loop through and covert the goofy timestamps into datetime objects
+        for l in jd['upcoming_shows']:
+            l['day_obj'] = parser.parse(l['day'])
+            l['start_time_obj'] = datetime.datetime.strptime(l['start_time'], "%H%M")
+        context['show'] = jd
 
     context['callsign'] = callsign
 

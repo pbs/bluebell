@@ -14,7 +14,7 @@
                 {% for upe in program.upcoming_episodes %}
                 <tr>
                     <td>
-                        <b>Time:</b> {{ upe.day }} at {{ upe.start_time }}<br>
+                        <b>Time:</b> {{ upe.day_obj|date:'l, M d' }} at {{ upe.start_time_obj|time:'h:i A' }}<br>
                         {% if upe.episode_title %}
                             <b>Episode Title:</b>
                             <a href='{% url view-show upe.show_id callsign %}'>{{ upe.episode_title }}</a><br>
