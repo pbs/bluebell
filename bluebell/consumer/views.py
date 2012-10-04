@@ -338,7 +338,7 @@ def listings(request,callsign,target_date=None):
     context['callsign'] = callsign
 
     return render_to_response(
-        'feed_listings.html',
+        'feed_listings2.html',
         context,
         context_instance=RequestContext(request)
     )
