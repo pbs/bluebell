@@ -10,4 +10,5 @@ urlpatterns = patterns('bluebell.consumer.views',
     url('^listings/(?P<callsign>\w+)/$', 'tvss.listings', name='listings'),
     url('^program/(?P<program_id>\d+)/(?P<callsign>\w+)/$', 'tvss.view_program', name='view-program'),
     url('^show/(?P<show_id>\w+)/(?P<callsign>\w+)/$', 'tvss.view_show', name='view-show'),
+    url('^search/(?P<callsign>\w+)/$', 'tvss.search', name='search'),
 )

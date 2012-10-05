@@ -1,6 +1,12 @@
 {% extends "base_nav.html" %}
 {% load static %}
 
+{% block searchbar %}
+    <form class="navbar-search pull-right" method='get' action='{% url search flagship_callsign %}'>
+        <input type="text" class="search-query" placeholder="Search {{flagship_callsign}}" name='q'>
+    </form>
+{% endblock %}
+
 {% block content %}
 
 <div class="container">
