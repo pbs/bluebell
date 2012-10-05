@@ -5,80 +5,23 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>Sodor Bluebell</title>
+        <title>Bluebell</title>
 
         <!-- Le base javascript -->
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
         <!-- Le base styles -->
-        <link rel="stylesheet" href="{% get_static_prefix %}bootstrap/css/bootstrap.css">
-        <!-- Le timepicker styles -->
-        <link rel="stylesheet" href="{% get_static_prefix %}bootstrap/css/timepicker.css">
-        <!-- Le datepicker styles -->
-        <link rel="stylesheet" href="{% get_static_prefix %}bootstrap/css/datepicker.css">
-        <!-- Le chosen styles -->
-        <link rel="stylesheet" href="{% get_static_prefix %}chosen/chosen.css">
+        <link rel="stylesheet" href="{% get_static_prefix %}bootstrap-2.1.1/css/bootstrap.css">
+        <link rel="stylesheet" href="{% get_static_prefix %}bootstrap-2.1.1/css/bootstrap-responsive.css">
     </head>
 
-    <body style="background-image: url('{% get_static_prefix %}weave.png');">
+    <body style="background-image: url('{% get_static_prefix %}grey.png');">
 
         {% block header %}{% endblock %}
         {% block content %}{% endblock %}
         {% block footer %}{% endblock %}
 
         <!-- Le bootstrap javascript -->
-        <script src="{% get_static_prefix %}bootstrap/js/bootstrap.js"></script>
-        <!-- Le timepicker javascript -->
-        <script src="{% get_static_prefix %}bootstrap/js/bootstrap-timepicker.js"></script>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('.timepicker').timepicker({
-                    defaultTime: 'current',
-                    template: 'dropdown',
-                    showSeconds: false,
-                    showMeridian: false,
-                });
-            });
-        </script>
-        <!-- Le datepicker javascript -->
-        <script src="{% get_static_prefix %}bootstrap/js/bootstrap-datepicker.js"></script>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                var currentDate = new Date();
-                var month = currentDate.getMonth() + 1;
-                if (month < 10){
-                    month = "0" + month;
-                }
-                var day = currentDate.getDate();
-                if (day < 10){
-                    day = "0" + day;
-                }
-                var year = currentDate.getFullYear();
-                var formattedDate = month + "-" + day + "-" + year;
-                $('.datepicker').val(formattedDate);
-                $('.datepicker').datepicker({
-                    format: 'mm-dd-yyyy',
-                });
-            });
-        </script>
-        <!-- Le tooltip javascript -->
-        <script src="{% get_static_prefix %}bootstrap/js/bootstrap-tooltip.js"></script>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('.sort_help').tooltip({
-                    title: 'The "sort" value -- and subsequent order that the stations appear in the localization results -- represents the relative Nielsen ranking within the entered ZIP code"s county. Click "Help" below for more information.',
-                    placement: 'left',
-                });
-                $('.confidence_help').tooltip({
-                    title: 'The "confidence" value represents how likely the member station is available for a given ZIP code. Click "Help" below for more information.',
-                    placement: 'left',
-                });
-            });
-        </script>
-        <!-- Le chosen javascript -->
-        <script src="{% get_static_prefix %}chosen/chosen.jquery.js" type="text/javascript"></script>
-        <script type="text/javascript">
-            $(".chzn-select").chosen();
-            $(".chzn-select-deselect").chosen({allow_single_deselect:true});
-        </script>
+        <script src="{% get_static_prefix %}bootstrap-2.1.1/js/bootstrap.js"></script>
+        {% block extrascripts %}{% endblock %}
     </body>
 </html>

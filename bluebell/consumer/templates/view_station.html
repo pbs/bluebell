@@ -20,7 +20,8 @@
             </tr>
         </tbody>
     </table>
-    <h1>Feeds</h1>
+    <h1>Feeds </h1>
+    <a href='{% url listings flagship_callsign %}'>(View Listings Grid)</a>
     <table class="table table-bordered table-condensed">
         <thead>
             <tr>
@@ -31,8 +32,8 @@
         <tbody>
             {% for f in feeds %}
             <tr>
-                <td><a href='{% url listings flagship_callsign %}'>{{ f.otc.short_name }}</a></td>
-                <td><a href='{% url listings flagship_callsign %}'>{{ f.otc.full_name }}</a></td>
+                <td>{{ f.otc.short_name }}</td>
+                <td>{{ f.otc.full_name }}</td>
                 <td>{{ f.otc.timezone }}</td>
             </tr>
             {% endfor %}

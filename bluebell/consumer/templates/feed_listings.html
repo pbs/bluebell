@@ -64,6 +64,12 @@
                 <td>{{ feed.short_name}}</td>
                 {% for l in feed.listings %}
                 <td colspan={{l.colspan}}>
+                    {% if l.episode_description %}
+                        <div class='listingdesc' rel='popover' data-content="{{l.episode_description}}">
+                    {% else %}
+                        <div class='listingdesc' rel='popover' data-content="{{l.description}}">
+                    {% endif %}
+
                     <b>
                     {% if l.program_id %}
                     <a href='{% url view-program l.program_id callsign %}'>{{l.title}}</a>
@@ -74,13 +80,7 @@
                     {% if l.episode_title %}
                         <i>{{l.episode_title}}</i><br>
                     {% endif %}
-                    {% if l.episode_description %}
-                        <div class='listing-desc' title="{{l.episode_description}}">More...
-                        </div>
-                    {% else %}
-                        <div class='listing-desc' title="{{l.description}}">More...
-                        </div>
-                    {% endif %}
+                    </div>
                 </td>
                 {% endfor %}
             </tr>
@@ -88,9 +88,13 @@
         </tbody>
     </table>
 </div>
+{% endblock %}
+
+{% block extrascripts %}
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('.listing-desc').tooltip()
-    }
+$(function()
+{
+    $('.listingdesc').popover({trigger:'hover'});
+});
 </script>
 {% endblock %}

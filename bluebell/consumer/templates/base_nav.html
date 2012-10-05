@@ -2,24 +2,29 @@
 {% load static %}
 
 {% block header %}
-    <header style="margin-bottom: 53px;">
-        <div class="navbar navbar-fixed-top">
+        <div class="navbar navbar-inverse">
             <div class="navbar-inner">
                 <div class="container">
-                    <ul class="nav" style="font-size:16px; padding-left:200px;">
-                        <li>
-                            <a href="{% url bluebell.consumer.views.home %}">Home</a>
-                        </li>
-                        <li class="divider-vertical"></li>
-                        <li>
-                            <a href="{% url bluebell.consumer.views.localize_stations %}">Station by Zip</a>
-                        </li>
-                        <li>
-                            <a href="{% url bluebell.consumer.views.localize_stations %}">Station by State</a>
-                        </li>
-                    </ul>
+                    <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="{% url home %}">
+                        BlueBell
+                    </a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav">
+                            <li>
+                                <a href="{% url station_by_zip %}">Station by Zip</a>
+                            </li>
+                            <!--li>
+                                <a href="{% url station_by_state %}">Station by State</a>
+                            </li-->
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </header>
 {% endblock %}

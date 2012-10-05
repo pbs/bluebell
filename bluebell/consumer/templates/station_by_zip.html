@@ -1,0 +1,78 @@
+{% extends "base_nav.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container" style="padding-top: 23px;">
+        <form method='post' action='{% url station_by_zip %}'>
+            {% csrf_token %}
+            <div class="row">
+                <div class="offset2" style="padding-left:40px;">
+                    <input name='zipcode' class="span5" type="text" maxlength="5" style="height:26px; font-size:16px; text-align:center;" value="{{ zipcode }}" required placeholder="Enter your zipcode...">
+                    <button type="submit" class="btn btn-large" style="margin-bottom:8px; margin-left:68px;"><i class="icon-road" style="margin-left:15px; margin-right:15px;"></i></button>
+                </div>
+            </div>
+        </form>
+        {% if hiconf %}
+        <div class="container" style="padding-top: 26px;">
+            <h2>High Confidence Stations</h2>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <th style="color:#005580;">Short Common Name</th>
+                        <th style="color:#C09853;">Flagship CallSign</th>
+                        <th class="confidence_help" style="color:#C09853;">Confidence</th>
+                        <th class="sort_help" style="color:#C09853;">Sort</th>
+                        <th style="color:#C09853;">Available Callsigns<br>(Indicates Low Confidence)</th>
+                    </thead>
+                    <tbody>
+                        {% for station in hiconf %}
+                            <tr>
+                                <td><a href='{% url view-station station.id %}'>{{ station.short_common_name }}</a></td>
+                                <td>{{ station.flagship }}</td>
+                                <td>{{ station.confidence }}</td>
+                                <td>{{ station.rank }}</td>
+                                <td>
+                                    {% for cs in station.callsigns %}
+                                        {{ cs }}
+                                    {% endfor %}
+                                    {% for cs in station.loconf_callsigns %}
+                                        ({{ cs }})
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+        <div>
+        <div class="container" style="padding-top: 26px;">
+            <h2>Low Confidence Stations</h2>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <th style="color:#005580;">Short Common Name</th>
+                        <th style="color:#C09853;">Flagship CallSign</th>
+                        <th class="confidence_help" style="color:#C09853;">Confidence</th>
+                        <th class="sort_help" style="color:#C09853;">Sort</th>
+                        <th style="color:#C09853;">Available Callsigns<br>(Indicates Low Confidence)</th>
+                    </thead>
+                    <tbody>
+                        {% for station in loconf %}
+                            <tr>
+                                <td><a href='{% url view-station 0 %}'>{{ station.short_common_name }}</a></td>
+                                <td>{{ station.flagship }}</td>
+                                <td>{{ station.confidence }}</td>
+                                <td>{{ station.rank }}</td>
+                                <td>
+                                    {% for cs in station.callsigns %}
+                                        {{ cs }}
+                                    {% endfor %}
+                                    {% for cs in station.loconf_callsigns %}
+                                        ({{ cs }})
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+        <div>
+        {% endif %}
+    </div>
+{% endblock %}
