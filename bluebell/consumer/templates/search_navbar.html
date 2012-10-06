@@ -1,0 +1,7 @@
+<li>
+    <a href="{% url listings callsign %}">{{callsign}} Schedule</a>
+</li>
+
+<form class="navbar-search pull-right" method='get' action='{% url search callsign %}'>
+    <input type="text" class="search-query" placeholder="Search {{callsign}}" name='q' value='{{searchterm}}'>
+</form>

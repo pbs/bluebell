@@ -1,0 +1,50 @@
+{% extends "base_nav.html" %}
+{% load static %}
+
+{% block headerbar %}
+{% include "search_navbar.html" %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <h1>Search results for "{{ searchterm}}"</h1>
+
+    <h3>Program Results</h3>
+    {% if search_results.program_results %}
+        The following program series were found
+        <dl>
+            {% for p in search_results.program_results %}
+                <dt><a href="{% url view-program  p.program_id callsign%}">{{p.title}}</a></dt>
+                <dd>{{p.description}}</dd>
+            {% endfor %}
+        </dl>
+    {% else %}
+        No matching programs
+    {% endif %}
+    <h3>Listing Results</h3>
+    {% if search_results.show_results %}
+        The following listings were found
+        <dl>
+            {% for s in search_results.show_results %}
+                <dt><a href='{% url view-show  s.show_id callsign%}'>{{s.title}}</a></dt>
+                <dd>
+                    {% if s.episode_title %}
+                        <b>{{s.episode_title}}</b><br>
+                    {% endif %}
+                    {% if s.episode_description %}
+                        {{s.episode_description}}
+                    {% else %}
+                        {{s.description}}
+                    {% endif %}
+                    {% if s.type == 'movie' %}
+                        <span class="label">Movie</span>
+                    {% endif %}
+                </dd>
+            {% endfor %}
+        </dl>
+    {% else %}
+        No matching listings
+    {% endif %}
+</div>
+{% endblock %}

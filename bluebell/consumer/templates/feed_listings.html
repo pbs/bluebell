@@ -1,10 +1,8 @@
 {% extends "base_nav.html" %}
 {% load static %}
 
-{% block searchbar %}
-    <form class="navbar-search pull-right" method='post' action='{% url station_by_zip %}'>
-        <input type="text" class="search-query" placeholder="Search {{callsign}}">
-    </form>
+{% block headerbar %}
+{% include "search_navbar.html" %}
 {% endblock %}
 
 {% block content %}
