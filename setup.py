@@ -5,6 +5,7 @@ dependencies = [
     'django==1.4.1',
 ]
 
+
 setup(
     name='bluebell',
     version='0.1',
