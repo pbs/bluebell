@@ -16,12 +16,13 @@ def listings(request,callsign,target_date=None):
     if not target_date:
         target_date = datetime.datetime.now().strftime("%Y%m%d")
 
-    # http://services-qa.pbs.org/tvss/day/20121002/weta/
+    # Get listings for a particular date
+    # http://services-qa.pbs.org/tvss/weta/day/20121002/
     #
-    listings_url = settings.SODOR_ENDPOINT + 'tvss/day/' + target_date + '/' + callsign + '/'
+    listings_url = settings.SODOR_ENDPOINT + 'tvss/' + callsign + '/day/' + target_date + '/'
     context = {}
 
-    data = requests.get(listings_url)
+    data = requests.get(listings_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
     if data.status_code == 200:
         jd = data.json
         # have to loop through and covert the goofy timestamps into datetime objects
@@ -54,12 +55,13 @@ def listings(request,callsign,target_date=None):
 
 def view_program(request, program_id, callsign):
     #
-    # http://services-qa.pbs.org/tvss/upcoming/program/752/weta/
+    # Get listings for a particular program
+    # http://services-qa.pbs.org/tvss/weta/upcoming/program/752
     #
-    program_url = settings.SODOR_ENDPOINT + 'tvss/upcoming/program/' + str(int(program_id)) + '/' + callsign + '/'
+    program_url = settings.SODOR_ENDPOINT + 'tvss/' + callsign +'/upcoming/program/' + str(int(program_id)) + '/'
     context = {}
 
-    data = requests.get(program_url)
+    data = requests.get(program_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
     if data.status_code == 200:
         jd = data.json
         # have to loop through and covert the goofy timestamps into datetime objects
@@ -78,12 +80,13 @@ def view_program(request, program_id, callsign):
 
 def view_show(request, show_id, callsign):
     #
-    # http://services-qa.pbs.org/tvss/upcoming/show/episode_9509/weta/
+    # Get listings for a particular show
+    # http://services-qa.pbs.org/tvss/weta/upcoming/show/episode_9509/
     #
-    show_url = settings.SODOR_ENDPOINT + 'tvss/upcoming/show/' + show_id + '/' + callsign + '/'
+    show_url = settings.SODOR_ENDPOINT + 'tvss/'+ callsign + '/upcoming/show/' + show_id + '/'
     context = {}
 
-    data = requests.get(show_url)
+    data = requests.get(show_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
     if data.status_code == 200:
         jd = data.json
         # have to loop through and covert the goofy timestamps into datetime objects
@@ -104,7 +107,8 @@ def view_show(request, show_id, callsign):
 def search(request, callsign):
 
     #
-    # http://services-qa.pbs.org/tvss/search/<callsign>/<term>/
+    # Search listings for a callsign
+    # http://services-qa.pbs.org/tvss/<callsign>/search/<term>/
     #
     searchterm = request.GET.get('q')
 
@@ -113,9 +117,9 @@ def search(request, callsign):
     context['searchterm'] = searchterm
 
     if searchterm:
-        search_url = settings.SODOR_ENDPOINT + 'tvss/search/' + callsign + '/' + urllib.quote(searchterm)
+        search_url = settings.SODOR_ENDPOINT + 'tvss/' + callsign + '/search/' + urllib.quote(searchterm)
 
-        data = requests.get(search_url)
+        data = requests.get(search_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
         if data.status_code != 200:
             return HttpResponseNotFound("Could not connect to server")
         context['search_results'] = data.json

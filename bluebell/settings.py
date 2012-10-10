@@ -144,7 +144,10 @@ LOGGING = {
     }
 }
 
+# Points to the API endpoint
 SODOR_ENDPOINT = 'http://services-qa.pbs.org/'
+# We'll need a key for the listing information
+TVSS_KEY = ''
 
 try:
     from settings_local import *
