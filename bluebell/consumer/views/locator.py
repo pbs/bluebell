@@ -398,10 +398,13 @@ def view_station(request,station_id):
         feeds.append(feed_obj)
     context['feeds'] = feeds
 
+    #
+    # Get today's listings
     # http://services-qa.pbs.org/tvss/today/wmpb/
-    whats_on_today_url = settings.SODOR_ENDPOINT + 'tvss/today/' + flagship.content.callsign
+    #
+    whats_on_today_url = settings.SODOR_ENDPOINT + 'tvss/' + flagship.content.callsign + '/today/'
 
-    data = requests.get(whats_on_today_url)
+    data = requests.get(whats_on_today_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
     if data.status_code == 200:
         jd = data.json
         # have to loop through and covert the goofy timestamps into datetime objects
