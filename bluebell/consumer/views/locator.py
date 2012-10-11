@@ -9,13 +9,6 @@ from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseNotFound
 from dateutil import parser
 
-from bluebell.consumer.extractor import (
-    get_localization_callsigns_data,
-    get_listing_callsigns_data,
-    get_feed_data,
-    get_listing_data,
-)
-
 from resty import client
 import requests
 
