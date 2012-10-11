@@ -13,7 +13,14 @@
 {% block content %}
     <div class="container">
         <div class="row offset3" style="padding:0 0 20px 60px;">
-            <a class="span3 btn btn-large" href="{% url station_by_zip %}">Find PBS Stations by zip<i style="margin-left: 15px;"class="icon-globe"></i></a>
+            <a class="span3 btn btn-large" href="{% url station_by_zip %}">Find PBS Stations by Zip<i style="margin-left: 15px;"class="icon-globe"></i></a>
+        </div>
+        <div class="row offset3" style="padding:0 0 20px 60px;">
+            <a class="span3 btn btn-large" href="{% url station_by_state %}">Find PBS Stations by State<i style="margin-left: 15px;"class="icon-road"></i></a>
+        </div>
+        <div class="row offset3" style="padding:0 0 20px 60px;">
+            <a class="span3 btn btn-large" href="{% url station_by_ip remote_addr %}">Find PBS Stations by IP Address<i style="margin-left: 15px;"class="icon-info-sign"></i></a><br>
+            Your IP is {{ remote_addr }}
         </div>
     </div>
 {% endblock %}

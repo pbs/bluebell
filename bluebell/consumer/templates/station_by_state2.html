@@ -1,0 +1,26 @@
+{% extends "base_nav.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Stations that broadcast in {{statex}}</h2>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <th style="color:#005580;">Common Name</th>
+                <th style="color:#C09853;">Short Common Name</th>
+                <th style="color:#C09853;">Flagship CallSign</th>
+                <th style="color:#C09853;">Headquarters City</th>
+            </thead>
+            <tbody>
+                {% for station in station_list %}
+                    <tr>
+                        <td><a href='{% url view-station station.id %}'>{{ station.name }}</a></td>
+                        <td>{{ station.short_name }}</td>
+                        <td>{{ station.flagship_callsign }}</td>
+                        <td>{{ station.city }}, {{ station.state }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+<div>
+
+{% endblock %}

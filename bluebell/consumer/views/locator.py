@@ -4,7 +4,7 @@ import json
 import urllib
 import datetime
 from django.conf import settings
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseNotFound
 from dateutil import parser
@@ -20,22 +20,27 @@ from resty import client
 import requests
 
 def home(request):
-    return render_to_response('home.html', {})
+    context = {}
+    context['remote_addr'] = request.META.get('REMOTE_ADDR')
+    return render_to_response('home.html', context,
+        context_instance=RequestContext(request))
 
 def test(request):
     return render_to_response('test.html', {})
 
-def station_by_zip(request):
+def station_by_zip(request,zip=None):
     context = {}
-    if request.method == 'POST':
-        zipcode = request.POST.get('zipcode')
+    if request.method == 'POST' or zip:
+        if zip:
+            zipcode = zip
+        else:
+            zipcode = request.POST.get('zipcode')
         context['zipcode'] = zipcode
 
         #
         # http://services-qa.pbs.org/callsigns/zip/22202.json
         #
         callsign_url = settings.SODOR_ENDPOINT + 'callsigns/zip/' + zipcode + '.json'
-        context = {}
 
         data = requests.get(callsign_url)
         if data.status_code != 200:
@@ -127,7 +132,75 @@ def _get_id_from_url(url):
     return(url[url.rfind('/')+1:-5])
 
 def station_by_state(request):
-    return render_to_response('test.html')
+
+    # Get list of states
+    # http://services-qa.pbs.org/states.json/
+
+    list_of_states_url = settings.SODOR_ENDPOINT + 'states.json'
+    context = {}
+
+    data = requests.get(list_of_states_url)
+    if data.status_code == 200:
+        context['states'] = data.json['$items']
+
+    return render_to_response(
+        'station_by_state.html',
+        context,
+        context_instance=RequestContext(request)
+    )
+
+def station_state(request,state):
+
+    # Get list of stations in a state
+    # http://services-qa.pbs.org/stations/state/AL.json
+
+    list_of_stations_url = settings.SODOR_ENDPOINT + 'stations/state/' + state + '.json'
+    context = {}
+
+    data = requests.get(list_of_stations_url)
+    if data.status_code == 200:
+        jd = data.json['$items']
+        station_list = []
+        for s in jd:
+            station = {}
+            station['name'] = s['$links'][0]['common_name']
+            station['id'] = _get_id_from_url(s['$links'][0]['$self'])
+            station['city'] = s['$links'][0]['mailing_city']
+            station['state'] = s['$links'][0]['mailing_state']
+            station['short_name'] = s['$links'][0]['short_common_name']
+            for cs in s['$links'][0]['$links']:
+                if cs['$relationship'] == 'flagship':
+                    station['flagship_callsign'] = cs['callsign']
+            station_list.append(station)
+
+        context['station_list'] = station_list
+
+    context['statex'] = state
+    return render_to_response(
+        'station_by_state2.html',
+        context,
+        context_instance=RequestContext(request)
+    )
+
+def station_by_ip(request, ip):
+
+    # Get zip for this ip
+    # http://services-qa.pbs.org/zipcodes/ip/138.88.141.44.json
+
+    list_of_zips_url = settings.SODOR_ENDPOINT + 'zipcodes/ip/' + ip + '.json'
+    context = {}
+    zipcode = None
+    print list_of_zips_url
+    data = requests.get(list_of_zips_url)
+    if data.status_code == 200:
+        print data.json
+        zipcode = data.json['$items'][0]['zipcode']
+
+    if not zipcode:
+        return HttpResponseNotFound()
+
+    return redirect('station_by_zip', zip=zipcode)
+
 
 def zipcode_listings(request):
     context = {}

@@ -1,0 +1,13 @@
+{% extends "base_nav.html" %}
+
+{% block content %}
+<div class="container">
+    {% for s in states %}
+        <h3>
+            <a href='{% url station_state s.state %}'>
+                {{s.state_name}}
+            </a>
+        </h3>
+    {% endfor %}
+
+{% endblock %}
