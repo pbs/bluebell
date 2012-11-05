@@ -149,6 +149,9 @@ SODOR_ENDPOINT = 'http://services-qa.pbs.org/'
 # We'll need a key for the listing information
 TVSS_KEY = ''
 
+#-------------------------------------------------------------------------------
+# Load overrides from settings_local.py
+#-------------------------------------------------------------------------------
 try:
     from settings_local import *
 except ImportError:
