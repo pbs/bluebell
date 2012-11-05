@@ -145,9 +145,9 @@ LOGGING = {
 }
 
 # Points to the API endpoint
-SODOR_ENDPOINT = 'http://services-qa.pbs.org/'
+SODOR_ENDPOINT = 'http://services.pbs.org/'
 # We'll need a key for the listing information
-TVSS_KEY = ''
+TVSS_KEY = 'edgar'
 
 #------------------------------------------------------------------------------
 # Load overrides from settings_local.py
