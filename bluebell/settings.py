@@ -144,10 +144,10 @@ LOGGING = {
     }
 }
 
-# Points to the API endpoint with key that points to QA
-SODOR_ENDPOINT = 'http://services-qa.pbs.org/'
+# Points to the API endpoint
+SODOR_ENDPOINT = 'http://services.pbs.org/'
 # We'll need a key for the listing information
-TVSS_KEY = 'edgar'
+TVSS_KEY = 'npr-core-publisher-f97cb505a150f11445d1895c7bd70e2c4a646d95867973d82c7c52be'
 
 #------------------------------------------------------------------------------
 # Load overrides from settings_local.py
