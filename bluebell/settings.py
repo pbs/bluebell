@@ -144,7 +144,7 @@ LOGGING = {
     }
 }
 
-# Points to the API endpoint
+# Points to the API endpoint with key that points to QA
 SODOR_ENDPOINT = 'http://services-qa.pbs.org/'
 # We'll need a key for the listing information
 TVSS_KEY = 'edgar'
