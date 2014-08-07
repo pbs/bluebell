@@ -2,3 +2,4 @@
 .elasticbeanstalk/
 .idea
 settings_local.py
+dev/.vagrant
