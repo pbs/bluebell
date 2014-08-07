@@ -13,16 +13,51 @@
 {% block content %}
     <div class="container">
         <div class="row offset3" style="padding:0 0 20px 60px;">
-            <a class="span3 btn btn-large" href="{% url station_by_zip %}">Find PBS Stations by Zip<i style="margin-left: 15px;"class="icon-globe"></i></a>
+            <a class="span3 btn btn-large" href="{% url station_by_zip %}">Find PBS Stations by Zip<i style="margin-left: 15px;"class="icon-envelope"></i></a>
         </div>
         <div class="row offset3" style="padding:0 0 20px 60px;">
             <a class="span3 btn btn-large" href="{% url station_by_state %}">Find PBS Stations by State<i style="margin-left: 15px;"class="icon-road"></i></a>
         </div>
         <div class="row offset3" style="padding:0 0 20px 60px;">
-            <a class="span3 btn btn-large" href="{% url station_by_ip remote_addr %}">Find PBS Stations by IP Address<i style="margin-left: 15px;"class="icon-info-sign"></i></a><br>
+            <a class="span3 btn btn-large" href="{% url station_by_ip remote_addr %}">Find PBS Stations by IP Address<i style="margin-left: 15px;"class="icon-info-sign"></i></a>
+        </div>
+        <div class="row offset3" style="padding:0 0 20px 60px;">
             Your IP is {{ remote_addr }}
         </div>
+        <div class="row offset3" style="padding:0 0 20px 60px;">
+            <a id="geoloclink" class="span3 btn btn-large" href="{% url station_by_geo %}">Find PBS Stations by GeoLocation<i style="margin-left: 15px;"class="icon-globe"></i></a>
+        </div>
+        <div class="row offset3" style="padding:0 0 20px 60px;">
+            <div id='geolocmsg'>Calculating geolocation...</div>
+        </div>
     </div>
+    <script src="{% get_static_prefix %}geoPosition.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+    if(geoPosition.init()){  // Geolocation Initialisation
+            geoPosition.getCurrentPosition(success_callback,error_callback,{enableHighAccuracy:true});
+    }else{
+            // You cannot use Geolocation in this device
+    }
+    //geoPositionSimulator.init();
+
+    // p : geolocation object
+    function success_callback(p){
+        // p.latitude : latitude value
+        // p.longitude : longitude value
+        //alert(p.coords.latitude);
+        //alert(p.coords.longitude);
+        //alert(p.coords.accuracy);
+        document.getElementById('geolocmsg').innerHTML = "Your position is (" +
+            p.coords.latitude + ", " + p.coords.longitude + ")";
+        document.getElementById('geoloclink').href =
+            "{% url station_by_geo %}?lat=" +
+            p.coords.latitude + "&long=" + p.coords.longitude;
+    }
+
+    function error_callback(p){
+        // p.message : error message
+    }
+    </script>
 {% endblock %}
 
 
@@ -31,7 +66,7 @@
         <hr/>
         <div class="container">
             <div class="row" style="text-align: center">
-                <p>&copy; Copyright 2012 <a href="http://pbs.org/">PBS</a></p>
+                <p>&copy; Copyright {% now "Y" %} <a href="http://pbs.org/">PBS</a></p>
             </div>
         </div>
     </footer>

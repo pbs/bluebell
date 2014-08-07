@@ -194,6 +194,10 @@ def station_by_ip(request, ip):
 
     return redirect('station_by_zip', zip=zipcode)
 
+def station_by_geo(request):
+
+    return redirect(HttpResponse("good"))
+
 def view_station(request,station_id):
 
     station_url = settings.SODOR_ENDPOINT + 'station/' + str(int(station_id)) + '.json'
