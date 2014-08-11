@@ -195,8 +195,63 @@ def station_by_ip(request, ip):
     return redirect('station_by_zip', zip=zipcode)
 
 def station_by_geo(request):
+    '''
+        Gets station by geolocation lattitude / longitude
+        Typical request is something like:
+        http://services.pbs.org/zipcodes/geo/38.8548038/-77.0501364.json
 
-    return redirect(HttpResponse("good"))
+        And response is like:
+            {
+               "$type":"application/vnd.pbs-collection+json",
+               "$items":[
+                  {
+                     "$type":"application/vnd.pbs-resource+json",
+                     "$class":"Zipcode",
+                     "zipcode":"20011",
+                     "$links":[
+                        ...
+                     ],
+                     "$self":"http://services.pbs.org/zipcode/20011.json"
+                  },
+                  {
+                     "$type":"application/vnd.pbs-resource+json",
+                     "$class":"Zipcode",
+                     "zipcode":"22202",
+                     "$links":[
+                        ...
+                     ],
+                     "$self":"http://services.pbs.org/zipcode/22202.json"
+                  }
+               ],
+               "$elements":"Zipcode",
+               "$self":"http://services.pbs.org/zipcodes/geo/38.8548038/-77.0501364.json"
+            }
+
+        So note that multiple zipcodes are returned.  Generally most zip codes
+        in the same area will have similar coverage for PBS stations.  So we
+        take an optimization and merely pick the first zip
+
+    '''
+
+    # get lat/long from url
+    glat = request.GET.get('lat')
+    glong = request.GET.get('long')
+    if not glat or not glong:
+        HttpResponseNotFound('Must pass in lat and long coordinates')
+
+    list_of_zips_url = settings.SODOR_ENDPOINT + 'zipcodes/geo/' + glat + '/' + glong + '.json'
+    context = {}
+    zipcode = None
+    print list_of_zips_url
+    data = requests.get(list_of_zips_url,headers={'X-PBSAUTH': settings.TVSS_KEY})
+    if data.status_code == 200:
+        print data.json
+        zipcode = data.json['$items'][0]['zipcode']
+
+    if not zipcode:
+        return HttpResponseNotFound('No zipcodes found for those coordinates')
+
+    return redirect('station_by_zip', zip=zipcode)
 
 def view_station(request,station_id):
 
