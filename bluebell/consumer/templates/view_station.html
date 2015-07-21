@@ -24,58 +24,100 @@
             </tr>
         </tbody>
     </table>
+  <h1>Callsigns </h1>
+    <table class="table table-bordered table-condensed">
+        <thead>
+            <tr>
+                <td>Callsign(s)</td><td>Listings</td><td>Flagship?</td>
+        </thead>
+        <tbody>
+            {% for c in callsigns %}
+            <tr>
+                <td>
+                    {%  if c.is_flagship  %}
+                    <b>
+                    {%  endif %}
+                    <a href="{{ c.self }}">{{ c.content.callsign }}</a>
+                    {%  if c.is_flagship  %}
+                    <b>
+                    {%  endif %}
+                </td>
+                <td><a href="
+                {% url listings c.content.callsign %}">listings</a></td>
+                <td>{{ c.is_flagship }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     <h1>Feeds </h1>
-    <a href='{% url listings callsign %}'>(View Listings Grid)</a>
     <table class="table table-bordered table-condensed">
         <thead>
             <tr>
                 <td>Feed Short Name</td>
                 <td>Feed Full Name</td>
                 <td>Time Zone</td>
+                <td>Digital Channel Number</td>
+                <td>Analog Channel NUmber</td>
+                <td>Is Flagship?</td>
         </thead>
         <tbody>
             {% for f in feeds %}
             <tr>
-                <td>{{ f.otc.short_name }}</td>
-                <td>{{ f.otc.full_name }}</td>
-                <td>{{ f.otc.timezone }}</td>
+
+                <td>
+                {%  if f.is_callsign  %}
+                    <b>
+                {%  endif %}
+                    {{ f.ota_channel.short_name }}
+                {%  if f.is_callsign %}
+                    </b>
+                {%  endif %}
+                </td>
+                <td>{{ f.ota_channel.full_name }}</td>
+                <td>{{ f.ota_channel.timezone }}</td>
+                <td>{{ f.ota_channel.digital_channel_number }}</td>
+                <td>{{ f.ota_channel.analog_channel_number }}</td>
+                <td>{{ f.is_callsign }}</td>
+
             </tr>
             {% endfor %}
         </tbody>
     </table>
     <h1>What's on Right Now</h1>
+    {%  for listings_today in listings_matrix %}
     <div class="row">
-    {% for f in listings_today.feeds %}
-        <div class="span3">
-        <h3>{{f.full_name}}</h3>
-        {% if f.analog_channel %}
-            Analog Channel {{ f.analog_channel }}
-        {% else %}
-            Digital Channel {{ f.digital_channel }}
-        {% endif %}
-        <table class="table table-bordered table-condensed">
-            <thead>
-                <td>Time</td>
-                <td>Listing</td>
-            </thead>
-            <tbody>
-            {% for listing in f.listings %}
-                <tr>
-                    <td>{{listing.start_time_obj|time:'h:i A'}}</td>
-                    {% if listing.program_id %}
-                    <td><b><a href='{% url view-program listing.program_id callsign %}'>{{listing.title}}</a></b><br>
-                    {% endif %}
-                    {% if listing.episode_title %}
-                        <i>{{listing.episode_title}}</i><br>
-                    {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        </div>
-    {% endfor %}
+        {% for f in listings_today.feeds %}
+            <div class="span3">
+            <h3>{{f.full_name}}</h3>
+            {% if f.analog_channel %}
+                Analog Channel {{ f.analog_channel }}
+            {% else %}
+                Digital Channel {{ f.digital_channel }}
+            {% endif %}
+            <table class="table table-bordered table-condensed">
+                <thead>
+                    <td>Time</td>
+                    <td>Listing</td>
+                </thead>
+                <tbody>
+                {% for listing in f.listings %}
+                    <tr>
+                        <td>{{listing.start_time_obj|time:'h:i A'}}</td>
+                        {% if listing.program_id %}
+                        <td><b><a href='
+                        {% url view-program listing.program_id listing.callsign %}'>{{listing.title}}</a></b><br>
+                        {% endif %}
+                        {% if listing.episode_title %}
+                            <i>{{listing.episode_title}}</i><br>
+                        {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        {% endfor %}
     </div>
-
+    {% endfor %}
 </div>
 {% endblock %}

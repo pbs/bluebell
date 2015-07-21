@@ -3,6 +3,7 @@ import re
 import json
 import urllib
 import datetime
+from operator import itemgetter, attrgetter
 from django.conf import settings
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
@@ -254,7 +255,9 @@ def station_by_geo(request):
     return redirect('station_by_zip', zip=zipcode)
 
 def view_station(request,station_id):
-
+    """Get a station, iterate through callsigns, iterate through each
+    callsigns' feeds, sort callsigns and feeds, then render.
+    """
     station_url = settings.SODOR_ENDPOINT + 'station/' + str(int(station_id)) + '.json'
     context = {}
     try:
@@ -264,40 +267,77 @@ def view_station(request,station_id):
 
     context['station'] = station_data.content
 
-    flagship = station_data.related('flagship')
-    context['callsign'] = flagship.content.callsign
-    primary_feeds = flagship.related('children')
+    # check children callsigns
+    # do NOT assume flagship is (all) that we want - that is a bad assumption
+    # e.g. WFSU has two children callsigns
+    flagship_obj = station_data.related('flagship')
+    flagship_callsign = flagship_obj.content.callsign
+    children_callsigns =  station_data.related('children')
+
     feeds = []
-    for f in primary_feeds.items():
-        f_url = f.self
-        f_id = f_url[f_url.rfind('/')+1:-5]
-        feed_obj = {}
-        feed_obj['id'] = f_id
-        otc = f.related('summary').content
-        feed_obj['otc'] = otc
-        feeds.append(feed_obj)
-    context['feeds'] = feeds
+    callsigns = []
+    context['callsign'] = flagship_callsign
+    context['callsigns'] = []
+    updated_callsigns = []
 
-    #
-    # Get today's listings
-    # http://services-qa.pbs.org/tvss/today/wmpb/
-    #
-    whats_on_today_url = settings.SODOR_ENDPOINT + 'tvss/' + flagship.content.callsign + '/today/'
+    for callsign_obj in children_callsigns.items():
+        """iterate thru callsigns"""
+        if callsign_obj.content.callsign == flagship_callsign:
+            callsign_obj.is_flagship = 'True'
+        else:
+            callsign_obj.is_flagship = None
 
-    data = requests.get(whats_on_today_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
-    if data.status_code == 200:
-        jd = data.json
-        # have to loop through and covert the goofy timestamps into datetime objects
-        for f in jd['feeds']:
-            for l in f['listings']:
-                l['start_time_obj'] = datetime.datetime.strptime(l['start_time'], "%H%M")
-        context['listings_today'] = jd
+        updated_callsigns.append(callsign_obj)
+        callsigns.append(callsign_obj.content.callsign)
+
+        children_feeds = callsign_obj.related('children')
+
+        for feed in children_feeds.items():
+            feed_url = feed.self
+            feed_id = feed_url[feed_url.rfind('/')+1:-5]
+            feed_obj = {}
+            feed_obj['id'] = feed_id
+            # over the air channel
+            # aka subchannel
+            ota_channel = feed.related('summary').content
+            feed_obj['ota_channel'] = ota_channel
+            if callsign_obj.content.callsign == flagship_callsign:
+                feed_obj['is_callsign'] = 'True'
+            else:
+                feed_obj['is_callsign'] = None
+            feeds.append(feed_obj)
+
+    feeds_by_flagship = sorted(feeds, key=itemgetter('is_callsign'),
+                               reverse=True)
+    callsigns_by_flagship = sorted(updated_callsigns,
+                                   key=attrgetter('is_flagship'), reverse=True)
+    context['feeds'] = feeds_by_flagship
+    context['callsigns'] = callsigns_by_flagship
+    context = render_todays_listings(request, context, callsigns)
 
     return render_to_response(
         'view_station.html',
         context,
-        context_instance=RequestContext(request)
+        context_instance = RequestContext(request)
     )
 
+def render_todays_listings(request, context, callsigns):
+    """
+    Not really gonna mess with one. Broke out this method and made it matrix.
+    """
+    context['listings_matrix'] = []
+    for callsign in callsigns:
+        whats_on_today_url = settings.SODOR_ENDPOINT + 'tvss/' + callsign + '/today/'
+        data = requests.get(whats_on_today_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
+
+        if data.status_code == 200:
+            jd = data.json
+            # have to loop through and covert the goofy timestamps into datetime objects
+            for f in jd['feeds']:
+                for l in f['listings']:
+                    l['start_time_obj'] = datetime.datetime.strptime(l['start_time'], "%H%M")
+                    l['callsign'] = callsign
+            context['listings_matrix'].append(jd)
+    return context
 
 
