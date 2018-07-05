@@ -76,7 +76,7 @@
 
                     <b>
                     {% if l.program_id %}
-                    <a href='{% url view-program l.program_id callsign %}'>{{l.title}}</a>
+                    <a href='{% url "view-program" l.program_id callsign %}'>{{l.title}}</a>
                     {% else %}
                     {{ l.title }}
                     {% endif %}
