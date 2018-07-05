@@ -1,7 +1,4 @@
-# Django settings for bluebell project.
-
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
+import os
 
 ADMINS = (
     ('Core Services', 'tpg-pbs-coreservices@threepillarglobal.com'),
@@ -9,15 +6,8 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+# no database for bluebell
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-    }
 }
 
 # Local time zone for this installation. Choices can be found here:
@@ -78,7 +68,6 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -88,7 +77,6 @@ SECRET_KEY = ')erm8m3@li4ki_@ke!b7pt6ia!h!c&!hdqvg!hao5wa#(ty#5m'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -102,9 +90,6 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'bluebell.urls'
 
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
 )
 
 INSTALLED_APPS = (
@@ -144,16 +129,13 @@ LOGGING = {
     }
 }
 
+# env variable overriden settings ########################
+
+# DEBUG is false unless BLUEBELL_DEBUG is 'true'
+DEBUG = os.environ.get('BLUEBELL_DEBUG', 'false').lower() == 'true'
+TEMPLATE_DEBUG = DEBUG
+
 # Points to the API endpoint
-SODOR_ENDPOINT = 'http://services.pbs.org/'
+SODOR_ENDPOINT = os.environ.get('TVSS_ENDPOINT', 'http://services.pbs.org/')
 # We'll need a key for the listing information
-TVSS_KEY = 'put key here'
-
-#------------------------------------------------------------------------------
-# Load overrides from settings_local.py
-#------------------------------------------------------------------------------
-try:
-    from settings_local import *
-except ImportError:
-    pass
-
+TVSS_KEY = os.environ.get('TVSS_KEY', '')
