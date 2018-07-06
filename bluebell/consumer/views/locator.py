@@ -1,7 +1,7 @@
 import os
 import re
 import json
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import datetime
 from operator import itemgetter, attrgetter
 from django.conf import settings
@@ -52,14 +52,14 @@ def station_by_zip(request,zip=None):
                     if rel['$relationship'] == 'flagship':
                         owner_station_callsign = rel['callsign']
 
-            print '------ found %s with flagship %s' % (owner_station_callsign,callsign['callsign'])
+            print('------ found %s with flagship %s' % (owner_station_callsign,callsign['callsign']))
             # Check to see if we've seen this station before
             if owner_station_callsign in station_list:
-                print 'found existing station'
+                print('found existing station')
                 # have seen this station before so process it
                 station = station_list[owner_station_callsign]
                 # Check to see if we've moved up the ranking
-                print 'callsign rank = %s' % callsign_map['rank']
+                print('callsign rank = %s' % callsign_map['rank'])
                 # Some callsigns will not have a rank and thus we should
                 # add them to a low confidence list
                 if not callsign_map['rank']:
@@ -77,13 +77,13 @@ def station_by_zip(request,zip=None):
                     station['callsigns'].append(callsign['callsign'])
 
             else:
-                print 'create new station'
+                print('create new station')
                 # create a new station entry and add it to the stations list
                 station = {}
                 station['flagship'] = owner_station_callsign
                 station['confidence'] = callsign_map['confidence']
                 station['rank'] = callsign_map['rank']
-                print 'rank = %s' % station['rank']
+                print('rank = %s' % station['rank'])
                 station['short_common_name'] = owner_station['short_common_name']
                 # get id from url
                 station['id'] = _get_id_from_url(owner_station['$self'])
@@ -96,12 +96,12 @@ def station_by_zip(request,zip=None):
 
                 station_list[owner_station_callsign] = station
 
-            print 'finished with station: %s' % station
+            print('finished with station: %s' % station)
 
         # now we can break out the two lists by confidence
         hiconf = []
         loconf = []
-        for cs,station in station_list.iteritems():
+        for cs,station in station_list.items():
             if station['confidence'] == 100:
                 hiconf.append(station)
             else:
@@ -184,10 +184,10 @@ def station_by_ip(request, ip):
     list_of_zips_url = settings.SODOR_ENDPOINT + 'zipcodes/ip/' + ip + '.json'
     context = {}
     zipcode = None
-    print list_of_zips_url
+    print(list_of_zips_url)
     data = requests.get(list_of_zips_url)
     if data.status_code == 200:
-        print data.json
+        print(data.json)
         zipcode = data.json['$items'][0]['zipcode']
 
     if not zipcode:
@@ -243,10 +243,10 @@ def station_by_geo(request):
     list_of_zips_url = settings.SODOR_ENDPOINT + 'zipcodes/geo/' + glat + '/' + glong + '.json'
     context = {}
     zipcode = None
-    print list_of_zips_url
+    print(list_of_zips_url)
     data = requests.get(list_of_zips_url,headers={'X-PBSAUTH': settings.TVSS_KEY})
     if data.status_code == 200:
-        print data.json
+        print(data.json)
         zipcode = data.json['$items'][0]['zipcode']
 
     if not zipcode:

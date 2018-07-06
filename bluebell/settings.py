@@ -153,7 +153,7 @@ TVSS_KEY = 'put key here'
 # Load overrides from settings_local.py
 #------------------------------------------------------------------------------
 try:
-    from settings_local import *
+    from .settings_local import *
 except ImportError:
     pass
 

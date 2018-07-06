@@ -1,7 +1,7 @@
 import os
 import re
 import json
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import datetime
 from django.conf import settings
 from django.shortcuts import render_to_response
@@ -117,7 +117,7 @@ def search(request, callsign):
     context['searchterm'] = searchterm
 
     if searchterm:
-        search_url = settings.SODOR_ENDPOINT + 'tvss/' + callsign + '/search/' + urllib.quote(searchterm)
+        search_url = settings.SODOR_ENDPOINT + 'tvss/' + callsign + '/search/' + urllib.parse.quote(searchterm)
 
         data = requests.get(search_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
         if data.status_code != 200:
