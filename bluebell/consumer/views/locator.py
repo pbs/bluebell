@@ -5,7 +5,7 @@ import urllib.request, urllib.parse, urllib.error
 import datetime
 from operator import itemgetter, attrgetter
 from django.conf import settings
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render, redirect
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseNotFound
 from dateutil import parser
@@ -16,11 +16,10 @@ import requests
 def home(request):
     context = {}
     context['remote_addr'] = request.META.get('REMOTE_ADDR')
-    return render_to_response('home.html', context,
-        context_instance=RequestContext(request))
+    return render(request, 'home.html', context)
 
 def test(request):
-    return render_to_response('test.html', {})
+    return render(request,'test.html')
 
 def station_by_zip(request,zip=None):
     context = {}
@@ -107,17 +106,17 @@ def station_by_zip(request,zip=None):
             else:
                 loconf.append(station)
 
-        # now sort both lists
-        hiconf = sorted(hiconf,key=lambda k: k['rank'])
-        loconf = sorted(loconf,key=lambda k: k['rank'])
+        # now sort both lists if unranked rank at 99999 to place at bottom of list
+        hiconf = sorted(hiconf,key=lambda k: k['rank'] or 99999)
+        loconf = sorted(loconf,key=lambda k: k['rank'] or 99999)
         context['hiconf'] = hiconf
         context['loconf'] = loconf
         #context['station_list'] = station_list
 
-    return render_to_response(
+    return render(
+        request,
         'station_by_zip.html',
-        context,
-        context_instance=RequestContext(request)
+        context
     )
 
 def _get_id_from_url(url):
@@ -137,10 +136,9 @@ def station_by_state(request):
     if data.status_code == 200:
         context['states'] = data.json['$items']
 
-    return render_to_response(
-        'station_by_state.html',
-        context,
-        context_instance=RequestContext(request)
+    return render(
+        request,'station_by_state.html',
+        context
     )
 
 def station_state(request,state):
@@ -170,10 +168,10 @@ def station_state(request,state):
         context['station_list'] = station_list
 
     context['statex'] = state
-    return render_to_response(
+    return render(
+        request,
         'station_by_state2.html',
-        context,
-        context_instance=RequestContext(request)
+        context
     )
 
 def station_by_ip(request, ip):
@@ -283,9 +281,9 @@ def view_station(request,station_id):
     for callsign_obj in children_callsigns.items():
         """iterate thru callsigns"""
         if callsign_obj.content.callsign == flagship_callsign:
-            callsign_obj.is_flagship = 'True'
+            callsign_obj.is_flagship = True
         else:
-            callsign_obj.is_flagship = None
+            callsign_obj.is_flagship = False
 
         updated_callsigns.append(callsign_obj)
         callsigns.append(callsign_obj.content.callsign)
@@ -302,9 +300,9 @@ def view_station(request,station_id):
             ota_channel = feed.related('summary').content
             feed_obj['ota_channel'] = ota_channel
             if callsign_obj.content.callsign == flagship_callsign:
-                feed_obj['is_callsign'] = 'True'
+                feed_obj['is_callsign'] = True
             else:
-                feed_obj['is_callsign'] = None
+                feed_obj['is_callsign'] = False
             feeds.append(feed_obj)
 
     feeds_by_flagship = sorted(feeds, key=itemgetter('is_callsign'),
@@ -315,10 +313,10 @@ def view_station(request,station_id):
     context['callsigns'] = callsigns_by_flagship
     context = render_todays_listings(request, context, callsigns)
 
-    return render_to_response(
+    return render(
+        request,
         'view_station.html',
-        context,
-        context_instance = RequestContext(request)
+        context
     )
 
 def render_todays_listings(request, context, callsigns):

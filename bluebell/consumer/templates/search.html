@@ -15,7 +15,7 @@
         The following program series were found
         <dl>
             {% for p in search_results.program_results %}
-                <dt><a href="{% url view-program  p.program_id callsign%}">{{p.title}}</a></dt>
+                <dt><a href="{% url "view-program"  p.program_id callsign%}">{{p.title}}</a></dt>
                 <dd>{{p.description}}</dd>
             {% endfor %}
         </dl>
@@ -27,7 +27,7 @@
         The following listings were found
         <dl>
             {% for s in search_results.show_results %}
-                <dt><a href='{% url view-show  s.show_id callsign%}'>{{s.title}}</a></dt>
+                <dt><a href='{% url "view-show"  s.show_id callsign%}'>{{s.title}}</a></dt>
                 <dd>
                     {% if s.episode_title %}
                         <b>{{s.episode_title}}</b><br>
