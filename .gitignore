@@ -3,3 +3,4 @@
 .idea
 settings_local.py
 dev/.vagrant
+.DS_Store
