@@ -74,19 +74,12 @@ STATICFILES_FINDERS = (
 SECRET_KEY = ')erm8m3@li4ki_@ke!b7pt6ia!h!c&!hdqvg!hao5wa#(ty#5m'
 
 # List of callables that know how to import templates from various sources.
-<<<<<<< HEAD
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-)
-=======
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'APP_DIRS': True,
     },
 ]
->>>>>>> django-update
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
@@ -98,8 +91,6 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'bluebell.urls'
 
-TEMPLATE_DIRS = (
-)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -142,7 +133,6 @@ LOGGING = {
 
 # DEBUG is false unless BLUEBELL_DEBUG is 'true'
 DEBUG = os.environ.get('BLUEBELL_DEBUG', 'false').lower() == 'true'
-TEMPLATE_DEBUG = DEBUG
 
 # Points to the API endpoint
 SODOR_ENDPOINT = os.environ.get('TVSS_ENDPOINT', 'http://services.pbs.org/')
