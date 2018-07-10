@@ -4,7 +4,7 @@
 <div class="container">
     {% for s in states %}
         <h3>
-            <a href='{% url station_state s.state %}'>
+            <a href='{% url "station_state" s.state %}'>
                 {{s.state_name}}
             </a>
         </h3>

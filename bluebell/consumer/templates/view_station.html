@@ -43,7 +43,7 @@
                     {%  endif %}
                 </td>
                 <td><a href="
-                {% url listings c.content.callsign %}">listings</a></td>
+                {% url "listings" c.content.callsign %}">listings</a></td>
                 <td>{{ c.is_flagship }}</td>
             </tr>
             {% endfor %}
@@ -105,7 +105,7 @@
                         <td>{{listing.start_time_obj|time:'h:i A'}}</td>
                         {% if listing.program_id %}
                         <td><b><a href='
-                        {% url view-program listing.program_id listing.callsign %}'>{{listing.title}}</a></b><br>
+                        {% url "view-program" listing.program_id listing.callsign %}'>{{listing.title}}</a></b><br>
                         {% endif %}
                         {% if listing.episode_title %}
                             <i>{{listing.episode_title}}</i><br>

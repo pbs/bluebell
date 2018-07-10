@@ -3,7 +3,7 @@
 
 {% block content %}
     <div class="container" style="padding-top: 23px;">
-        <form method='post' action='{% url home %}'>
+        <form method='post' action='{% url "home" %}'>
             {% csrf_token %}
             <div class="row">
                 <div class="span7 offset2" style="padding-left:40px;">
@@ -43,7 +43,7 @@
                                         {% for feed_name, listing_data in feed.items %}
                                             <tr>
                                                 <th style="text-align: center; vertical-align:middle; width:140px; color:#C09853;">
-                                                    <div><a href='{% url feed-listings f.id %}'>{{ feed_name }}</a></div>
+                                                    <div><a href='{% url "feed-listings" f.id %}'>{{ feed_name }}</a></div>
                                                     {% if selected_headend %}
                                                         <p style="color:#333;">{{ listing_data.0 }}</p>
                                                     {% endif %}

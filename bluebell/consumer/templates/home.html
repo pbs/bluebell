@@ -13,19 +13,19 @@
 {% block content %}
     <div class="container">
         <div class="row offset3" style="padding:0 0 20px 60px;">
-            <a class="span3 btn btn-large" href="{% url station_by_zip %}">Find PBS Stations by Zip<i style="margin-left: 15px;"class="icon-envelope"></i></a>
+            <a class="span3 btn btn-large" href="{% url "station_by_zip" %}">Find PBS Stations by Zip<i style="margin-left: 15px;"class="icon-envelope"></i></a>
         </div>
         <div class="row offset3" style="padding:0 0 20px 60px;">
-            <a class="span3 btn btn-large" href="{% url station_by_state %}">Find PBS Stations by State<i style="margin-left: 15px;"class="icon-road"></i></a>
+            <a class="span3 btn btn-large" href="{% url "station_by_state" %}">Find PBS Stations by State<i style="margin-left: 15px;"class="icon-road"></i></a>
         </div>
         <div class="row offset3" style="padding:0 0 20px 60px;">
-            <a class="span3 btn btn-large" href="{% url station_by_ip remote_addr %}">Find PBS Stations by IP Address<i style="margin-left: 15px;"class="icon-info-sign"></i></a>
+            <a class="span3 btn btn-large" href="{% url "station_by_ip" remote_addr %}">Find PBS Stations by IP Address<i style="margin-left: 15px;"class="icon-info-sign"></i></a>
         </div>
         <div class="row offset3" style="padding:0 0 20px 60px;">
             Your IP is {{ remote_addr }}
         </div>
         <div class="row offset3" style="padding:0 0 20px 60px;">
-            <a id="geoloclink" class="span3 btn btn-large" href="{% url station_by_geo %}">Find PBS Stations by GeoLocation<i style="margin-left: 15px;"class="icon-globe"></i></a>
+            <a id="geoloclink" class="span3 btn btn-large" href="{% url "station_by_geo" %}">Find PBS Stations by GeoLocation<i style="margin-left: 15px;"class="icon-globe"></i></a>
         </div>
         <div class="row offset3" style="padding:0 0 20px 60px;">
             <div id='geolocmsg'>Calculating geolocation...</div>
@@ -50,7 +50,7 @@
         document.getElementById('geolocmsg').innerHTML = "Your position is (" +
             p.coords.latitude + ", " + p.coords.longitude + ")";
         document.getElementById('geoloclink').href =
-            "{% url station_by_geo %}?lat=" +
+            "{% url "station_by_geo" %}?lat=" +
             p.coords.latitude + "&long=" + p.coords.longitude;
     }
 

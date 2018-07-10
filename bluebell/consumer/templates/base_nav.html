@@ -11,13 +11,13 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </a>
-                    <a class="brand" href="{% url home %}">
+                    <a class="brand" href="{% url "home" %}">
                         BlueBell
                     </a>
                     <div class="nav-collapse collapse">
                         <ul class="nav">
                             <!--li>
-                                <a href="{% url station_by_state %}">Station by State</a>
+                                <a href="{% url "station_by_state" %}">Station by State</a>
                             </li-->
                             {% block headerbar %}
                             {% endblock %}

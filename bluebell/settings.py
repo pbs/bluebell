@@ -74,10 +74,19 @@ STATICFILES_FINDERS = (
 SECRET_KEY = ')erm8m3@li4ki_@ke!b7pt6ia!h!c&!hdqvg!hao5wa#(ty#5m'
 
 # List of callables that know how to import templates from various sources.
+<<<<<<< HEAD
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
 )
+=======
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+    },
+]
+>>>>>>> django-update
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',

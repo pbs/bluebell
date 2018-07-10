@@ -21,7 +21,7 @@
     {% endif %}
     </p>
     {% if show.program_id %}
-        <p>Program: <a href='{% url view-program show.program_id callsign %}'>{{ show.title }}</a>
+        <p>Program: <a href='{% url "view-program" show.program_id callsign %}'>{{ show.title }}</a>
     {% endif %}
     <h3>Upcoming Showings</h3>
     <table class="table table-bordered table-condensed">

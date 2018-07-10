@@ -1,10 +1,10 @@
 import os
 import re
 import json
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import datetime
 from django.conf import settings
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseNotFound
 from dateutil import parser
@@ -47,10 +47,10 @@ def listings(request,callsign,target_date=None):
 
     context['callsign'] = callsign
 
-    return render_to_response(
+    return render(
+        request,
         'feed_listings.html',
-        context,
-        context_instance=RequestContext(request)
+        context
     )
 
 def view_program(request, program_id, callsign):
@@ -72,10 +72,10 @@ def view_program(request, program_id, callsign):
 
     context['callsign'] = callsign
 
-    return render_to_response(
+    return render(
+        request,
         'view_program.html',
-        context,
-        context_instance=RequestContext(request)
+        context
     )
 
 def view_show(request, show_id, callsign):
@@ -97,10 +97,10 @@ def view_show(request, show_id, callsign):
 
     context['callsign'] = callsign
 
-    return render_to_response(
+    return render(
+        request,
         'view_show.html',
-        context,
-        context_instance=RequestContext(request)
+        context
     )
 
 @csrf_exempt
@@ -117,17 +117,17 @@ def search(request, callsign):
     context['searchterm'] = searchterm
 
     if searchterm:
-        search_url = settings.SODOR_ENDPOINT + 'tvss/' + callsign + '/search/' + urllib.quote(searchterm)
+        search_url = settings.SODOR_ENDPOINT + 'tvss/' + callsign + '/search/' + urllib.parse.quote(searchterm)
 
         data = requests.get(search_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
         if data.status_code != 200:
             return HttpResponseNotFound("Could not connect to server")
         context['search_results'] = data.json
 
-    return render_to_response(
+    return render(
+        request,
         'search.html',
-        context,
-        context_instance=RequestContext(request)
+        context
     )
 
 
