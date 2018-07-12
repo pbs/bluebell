@@ -26,8 +26,15 @@ export BLUEBELL_DEBUG=true
 export TVSS_KEY=your-key-here
 ```
 
-# Run Dev environment
+### Run Dev environment
 
 Start the dev server by using: `python manage.py runserver`
 
 On your host system you should be able to use http://127.0.0.1:8000/ to access bluebell
+
+
+# Alternate Docker Setup
+
+```
+docker-compose run -p 8000:8000 --rm web
+```

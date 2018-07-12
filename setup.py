@@ -2,7 +2,7 @@
 from setuptools import setup
 
 dependencies = [
-    'django<=2',
+    'django<2',
     'python-dateutil==2.1',
     'requests<=3',
     'resty==0.1',
