@@ -18,9 +18,6 @@ def home(request):
     context['remote_addr'] = request.META.get('REMOTE_ADDR')
     return render(request, 'home.html', context)
 
-def test(request):
-    return render(request,'test.html')
-
 def station_by_zip(request,zip=None):
     context = {}
     if request.method == 'POST' or zip:

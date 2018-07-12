@@ -3,7 +3,6 @@ from bluebell.consumer.views import locator, tvss
 
 urlpatterns = [
     url('^$', locator.home, name='home'),
-    url('^test?/$', locator.test, name='test'),
     url('^station_by_zip/$', locator.station_by_zip, name='station_by_zip'),
     url('^station_by_zip/(?P<zip>\d+)/$', locator.station_by_zip, name='station_by_zip'),
     url('^station_by_state/$', locator.station_by_state, name='station_by_state'),
