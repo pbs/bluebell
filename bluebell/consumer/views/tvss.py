@@ -24,7 +24,7 @@ def listings(request,callsign,target_date=None):
 
     data = requests.get(listings_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
     if data.status_code == 200:
-        jd = data.json
+        jd = data.json()
         # have to loop through and covert the goofy timestamps into datetime objects
         for f in jd['feeds']:
             # check the first listing in the list.  if it doesn't start at midnight
@@ -63,7 +63,7 @@ def view_program(request, program_id, callsign):
 
     data = requests.get(program_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
     if data.status_code == 200:
-        jd = data.json
+        jd = data.json()
         # have to loop through and covert the goofy timestamps into datetime objects
         for l in jd['upcoming_episodes']:
             l['day_obj'] = parser.parse(l['day'])
@@ -88,7 +88,7 @@ def view_show(request, show_id, callsign):
 
     data = requests.get(show_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
     if data.status_code == 200:
-        jd = data.json
+        jd = data.json()
         # have to loop through and covert the goofy timestamps into datetime objects
         for l in jd['upcoming_shows']:
             l['day_obj'] = parser.parse(l['day'])
@@ -122,7 +122,7 @@ def search(request, callsign):
         data = requests.get(search_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
         if data.status_code != 200:
             return HttpResponseNotFound("Could not connect to server")
-        context['search_results'] = data.json
+        context['search_results'] = data.json()
 
     return render(
         request,
