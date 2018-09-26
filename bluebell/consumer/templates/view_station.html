@@ -61,22 +61,22 @@
                 <td>Is Flagship?</td>
         </thead>
         <tbody>
-            {% for f in feeds %}
+            {% for f in listings_matrix.0.feeds %}
             <tr>
 
                 <td>
                 {%  if f.is_callsign  %}
                     <b>
                 {%  endif %}
-                    {{ f.ota_channel.short_name }}
+                    {{ f.short_name }}
                 {%  if f.is_callsign %}
                     </b>
                 {%  endif %}
                 </td>
-                <td>{{ f.ota_channel.full_name }}</td>
-                <td>{{ f.ota_channel.timezone }}</td>
-                <td>{{ f.ota_channel.digital_channel_number }}</td>
-                <td>{{ f.ota_channel.analog_channel_number }}</td>
+                <td>{{ f.full_name }}</td>
+                <td>{{ f.timezone }}</td>
+                <td>{{ f.digital_channel }}</td>
+                <td>{{ f.analog_channel }}</td>
                 <td>{{ f.is_callsign }}</td>
 
             </tr>
