@@ -135,6 +135,6 @@ LOGGING = {
 DEBUG = os.environ.get('BLUEBELL_DEBUG', 'false').lower() == 'true'
 
 # Points to the API endpoint
-SODOR_ENDPOINT = os.environ.get('TVSS_ENDPOINT', 'https://services.pbs.org/')
+TELSTAR_ENDPOINT = os.environ.get('TVSS_ENDPOINT', 'https://services.pbs.org/')
 # We'll need a key for the listing information
 TVSS_KEY = os.environ.get('TVSS_KEY', '')

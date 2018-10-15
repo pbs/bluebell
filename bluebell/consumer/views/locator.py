@@ -30,7 +30,7 @@ def station_by_zip(request,zip=None):
         #
         # http://services-qa.pbs.org/callsigns/zip/22202.json
         #
-        callsign_url = settings.SODOR_ENDPOINT + 'callsigns/zip/' + zipcode + '.json'
+        callsign_url = settings.TELSTAR_ENDPOINT + 'callsigns/zip/' + zipcode + '.json'
 
         data = requests.get(callsign_url)
         if data.status_code != 200:
@@ -126,7 +126,7 @@ def station_by_state(request):
     # Get list of states
     # http://services-qa.pbs.org/states.json/
 
-    list_of_states_url = settings.SODOR_ENDPOINT + 'states.json'
+    list_of_states_url = settings.TELSTAR_ENDPOINT + 'states.json'
     context = {}
 
     data = requests.get(list_of_states_url)
@@ -143,7 +143,7 @@ def station_state(request,state):
     # Get list of stations in a state
     # http://services-qa.pbs.org/stations/state/AL.json
 
-    list_of_stations_url = settings.SODOR_ENDPOINT + 'stations/state/' + state + '.json'
+    list_of_stations_url = settings.TELSTAR_ENDPOINT + 'stations/state/' + state + '.json'
     context = {}
 
     data = requests.get(list_of_stations_url)
@@ -176,7 +176,7 @@ def station_by_ip(request, ip):
     # Get zip for this ip
     # http://services-qa.pbs.org/zipcodes/ip/138.88.141.44.json
 
-    list_of_zips_url = settings.SODOR_ENDPOINT + 'zipcodes/ip/' + ip + '.json'
+    list_of_zips_url = settings.TELSTAR_ENDPOINT + 'zipcodes/ip/' + ip + '.json'
     context = {}
     zipcode = None
     data = requests.get(list_of_zips_url)
@@ -233,7 +233,7 @@ def station_by_geo(request):
     if not glat or not glong:
         HttpResponseNotFound('Must pass in lat and long coordinates')
 
-    list_of_zips_url = settings.SODOR_ENDPOINT + 'zipcodes/geo/' + glat + '/' + glong + '.json'
+    list_of_zips_url = settings.TELSTAR_ENDPOINT + 'zipcodes/geo/' + glat + '/' + glong + '.json'
     context = {}
     zipcode = None
     data = requests.get(list_of_zips_url,headers={'X-PBSAUTH': settings.TVSS_KEY})
@@ -249,7 +249,7 @@ def view_station(request,station_id):
     """Get a station, iterate through callsigns, iterate through each
     callsigns' feeds, sort callsigns and feeds, then render.
     """
-    station_url = settings.SODOR_ENDPOINT + 'station/' + str(int(station_id)) + '.json'
+    station_url = settings.TELSTAR_ENDPOINT + 'station/' + str(int(station_id)) + '.json'
     context = {}
     try:
         station_data = client.load(station_url)
@@ -301,7 +301,7 @@ def render_todays_listings(request, context, callsigns):
     """
     context['listings_matrix'] = []
     for callsign in callsigns:
-        whats_on_today_url = settings.SODOR_ENDPOINT + 'tvss/' + callsign + '/today/'
+        whats_on_today_url = settings.TELSTAR_ENDPOINT + 'tvss/' + callsign + '/today/'
         data = requests.get(whats_on_today_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
 
         if data.status_code == 200:

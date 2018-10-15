@@ -19,7 +19,7 @@ def listings(request,callsign,target_date=None):
     # Get listings for a particular date
     # http://services-qa.pbs.org/tvss/weta/day/20121002/
     #
-    listings_url = settings.SODOR_ENDPOINT + 'tvss/' + callsign + '/day/' + target_date + '/'
+    listings_url = settings.TELSTAR_ENDPOINT + 'tvss/' + callsign + '/day/' + target_date + '/'
     context = {}
 
     data = requests.get(listings_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
@@ -58,7 +58,7 @@ def view_program(request, program_id, callsign):
     # Get listings for a particular program
     # http://services-qa.pbs.org/tvss/weta/upcoming/program/752
     #
-    program_url = settings.SODOR_ENDPOINT + 'tvss/' + callsign +'/upcoming/program/' + str(int(program_id)) + '/'
+    program_url = settings.TELSTAR_ENDPOINT + 'tvss/' + callsign +'/upcoming/program/' + str(int(program_id)) + '/'
     context = {}
 
     data = requests.get(program_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
@@ -83,7 +83,7 @@ def view_show(request, show_id, callsign):
     # Get listings for a particular show
     # http://services-qa.pbs.org/tvss/weta/upcoming/show/episode_9509/
     #
-    show_url = settings.SODOR_ENDPOINT + 'tvss/'+ callsign + '/upcoming/show/' + show_id + '/'
+    show_url = settings.TELSTAR_ENDPOINT + 'tvss/'+ callsign + '/upcoming/show/' + show_id + '/'
     context = {}
 
     data = requests.get(show_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
@@ -117,7 +117,7 @@ def search(request, callsign):
     context['searchterm'] = searchterm
 
     if searchterm:
-        search_url = settings.SODOR_ENDPOINT + 'tvss/' + callsign + '/search/' + urllib.parse.quote(searchterm)
+        search_url = settings.TELSTAR_ENDPOINT + 'tvss/' + callsign + '/search/' + urllib.parse.quote(searchterm)
 
         data = requests.get(search_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
         if data.status_code != 200:
