@@ -2,13 +2,16 @@
 from setuptools import setup
 
 dependencies = [
-    'django==1.4.1',
+    'django<2.1',
+    'python-dateutil<3',
+    'requests<=3',
+    'resty==0.1',
 ]
 
 
 setup(
     name='bluebell',
-    version='0.1',
+    version='0.2',
     description='Sodor API consumer.',
     author='TPG CORE Services Team',
     author_email='tpg-pbs-coreservices@threepillarglobal.com',

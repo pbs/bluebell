@@ -10,32 +10,31 @@ Django client for API demonstration.  Uses the PBS APIs
 ### Checkout application from git
 `git clone git@github.com:pbs/bluebell.git`
 
-### Setup and start Vagrant environment
+### setup & activate a Python 3 virtual environment
 ```
-cd bluebell/dev
-vagrant up
-vagrant ssh
+mkvirtualenv -p python3 bluebell
 ```
 
-### One more bit of config
+### Install package & dependencies
 ```
-pip install -r requirements.txt
-```
-Create a local settings file
-```
-vim vim bluebell/settings_local.py
-```
-Edit file to have
-```
-TVSS_KEY = '<your key here>'
+pip install -e .
 ```
 
-# Run Dev environment
+### Set environment variables
+```
+export BLUEBELL_DEBUG=true
+export TVSS_KEY=your-key-here
+```
 
-Make sure your vagrant is running if you haven't already by using `vagrant up`
+### Run Dev environment
 
-Then ssh into the vagrant box by using `vagrant ssh`
-
-Start the dev server by using: `python manage.py runserver 10.0.2.15:8000`
+Start the dev server by using: `python manage.py runserver`
 
 On your host system you should be able to use http://127.0.0.1:8000/ to access bluebell
+
+
+# Alternate Docker Setup
+
+```
+docker-compose run -p 8000:8000 --rm web
+```

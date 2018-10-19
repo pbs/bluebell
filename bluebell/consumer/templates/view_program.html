@@ -21,7 +21,7 @@
                         <b>Time:</b> {{ upe.day_obj|date:'l, M d' }} at {{ upe.start_time_obj|time:'h:i A' }}<br>
                         {% if upe.episode_title %}
                             <b>Episode Title:</b>
-                            <a href='{% url view-show upe.show_id callsign %}'>{{ upe.episode_title }}</a><br>
+                            <a href='{% url "view-show" upe.show_id callsign %}'>{{ upe.episode_title }}</a><br>
                             <b>Episode Description:</b>{{ upe.episode_description }}<br>
                         {% endif %}
                         <b>Duration:</b> {{ upe.minutes }} minutes<br>

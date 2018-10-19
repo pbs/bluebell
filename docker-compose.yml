@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: django-admin runserver 0.0.0.0:8000
+    env_file:
+      - docker/config/.env
+    ports:
+      - "8000:8000"

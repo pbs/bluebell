@@ -1,10 +1,10 @@
 import os
 import re
 import json
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import datetime
 from django.conf import settings
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseNotFound
 from dateutil import parser
@@ -19,12 +19,12 @@ def listings(request,callsign,target_date=None):
     # Get listings for a particular date
     # http://services-qa.pbs.org/tvss/weta/day/20121002/
     #
-    listings_url = settings.SODOR_ENDPOINT + 'tvss/' + callsign + '/day/' + target_date + '/'
+    listings_url = settings.TELSTAR_ENDPOINT + 'tvss/' + callsign + '/day/' + target_date + '/'
     context = {}
 
     data = requests.get(listings_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
     if data.status_code == 200:
-        jd = data.json
+        jd = data.json()
         # have to loop through and covert the goofy timestamps into datetime objects
         for f in jd['feeds']:
             # check the first listing in the list.  if it doesn't start at midnight
@@ -47,10 +47,10 @@ def listings(request,callsign,target_date=None):
 
     context['callsign'] = callsign
 
-    return render_to_response(
+    return render(
+        request,
         'feed_listings.html',
-        context,
-        context_instance=RequestContext(request)
+        context
     )
 
 def view_program(request, program_id, callsign):
@@ -58,12 +58,12 @@ def view_program(request, program_id, callsign):
     # Get listings for a particular program
     # http://services-qa.pbs.org/tvss/weta/upcoming/program/752
     #
-    program_url = settings.SODOR_ENDPOINT + 'tvss/' + callsign +'/upcoming/program/' + str(int(program_id)) + '/'
+    program_url = settings.TELSTAR_ENDPOINT + 'tvss/' + callsign +'/upcoming/program/' + str(int(program_id)) + '/'
     context = {}
 
     data = requests.get(program_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
     if data.status_code == 200:
-        jd = data.json
+        jd = data.json()
         # have to loop through and covert the goofy timestamps into datetime objects
         for l in jd['upcoming_episodes']:
             l['day_obj'] = parser.parse(l['day'])
@@ -72,10 +72,10 @@ def view_program(request, program_id, callsign):
 
     context['callsign'] = callsign
 
-    return render_to_response(
+    return render(
+        request,
         'view_program.html',
-        context,
-        context_instance=RequestContext(request)
+        context
     )
 
 def view_show(request, show_id, callsign):
@@ -83,12 +83,12 @@ def view_show(request, show_id, callsign):
     # Get listings for a particular show
     # http://services-qa.pbs.org/tvss/weta/upcoming/show/episode_9509/
     #
-    show_url = settings.SODOR_ENDPOINT + 'tvss/'+ callsign + '/upcoming/show/' + show_id + '/'
+    show_url = settings.TELSTAR_ENDPOINT + 'tvss/'+ callsign + '/upcoming/show/' + show_id + '/'
     context = {}
 
     data = requests.get(show_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
     if data.status_code == 200:
-        jd = data.json
+        jd = data.json()
         # have to loop through and covert the goofy timestamps into datetime objects
         for l in jd['upcoming_shows']:
             l['day_obj'] = parser.parse(l['day'])
@@ -97,10 +97,10 @@ def view_show(request, show_id, callsign):
 
     context['callsign'] = callsign
 
-    return render_to_response(
+    return render(
+        request,
         'view_show.html',
-        context,
-        context_instance=RequestContext(request)
+        context
     )
 
 @csrf_exempt
@@ -117,17 +117,17 @@ def search(request, callsign):
     context['searchterm'] = searchterm
 
     if searchterm:
-        search_url = settings.SODOR_ENDPOINT + 'tvss/' + callsign + '/search/' + urllib.quote(searchterm)
+        search_url = settings.TELSTAR_ENDPOINT + 'tvss/' + callsign + '/search/' + urllib.parse.quote(searchterm)
 
         data = requests.get(search_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
         if data.status_code != 200:
             return HttpResponseNotFound("Could not connect to server")
-        context['search_results'] = data.json
+        context['search_results'] = data.json()
 
-    return render_to_response(
+    return render(
+        request,
         'search.html',
-        context,
-        context_instance=RequestContext(request)
+        context
     )
 
 

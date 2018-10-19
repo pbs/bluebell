@@ -3,7 +3,7 @@
 
 {% block content %}
     <div class="container" style="padding-top: 23px;">
-        <form method='post' action='{% url station_by_zip %}'>
+        <form method='post' action='{% url "station_by_zip" %}'>
             {% csrf_token %}
             <div class="row">
                 <div class="offset2" style="padding-left:40px;">
@@ -28,7 +28,7 @@
                     <tbody>
                         {% for station in hiconf %}
                             <tr>
-                                <td><a href='{% url view-station station.id %}'>{{ station.short_common_name }}</a></td>
+                                <td><a href='{% url "view-station" station.id %}'>{{ station.short_common_name }}</a></td>
                                 <td>{{ station.flagship }}</td>
                                 <td>{{ station.confidence }}</td>
                                 <td>{{ station.rank }}</td>
@@ -58,7 +58,7 @@
                     <tbody>
                         {% for station in loconf %}
                             <tr>
-                                <td><a href='{% url view-station 0 %}'>{{ station.short_common_name }}</a></td>
+                                <td><a href='{% url "view-station" 0 %}'>{{ station.short_common_name }}</a></td>
                                 <td>{{ station.flagship }}</td>
                                 <td>{{ station.confidence }}</td>
                                 <td>{{ station.rank }}</td>

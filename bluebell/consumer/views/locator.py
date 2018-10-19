@@ -1,11 +1,11 @@
 import os
 import re
 import json
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import datetime
 from operator import itemgetter, attrgetter
 from django.conf import settings
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render, redirect
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseNotFound
 from dateutil import parser
@@ -16,11 +16,7 @@ import requests
 def home(request):
     context = {}
     context['remote_addr'] = request.META.get('REMOTE_ADDR')
-    return render_to_response('home.html', context,
-        context_instance=RequestContext(request))
-
-def test(request):
-    return render_to_response('test.html', {})
+    return render(request, 'home.html', context)
 
 def station_by_zip(request,zip=None):
     context = {}
@@ -34,13 +30,13 @@ def station_by_zip(request,zip=None):
         #
         # http://services-qa.pbs.org/callsigns/zip/22202.json
         #
-        callsign_url = settings.SODOR_ENDPOINT + 'callsigns/zip/' + zipcode + '.json'
+        callsign_url = settings.TELSTAR_ENDPOINT + 'callsigns/zip/' + zipcode + '.json'
 
         data = requests.get(callsign_url)
         if data.status_code != 200:
             return HttpResponseNotFound()
 
-        jd = data.json
+        jd = data.json()
         # have to loop through and generate the summary for the page
         station_list = {}
         for callsign_map in jd['$items']:
@@ -52,14 +48,14 @@ def station_by_zip(request,zip=None):
                     if rel['$relationship'] == 'flagship':
                         owner_station_callsign = rel['callsign']
 
-            print '------ found %s with flagship %s' % (owner_station_callsign,callsign['callsign'])
+            print('------ found %s with flagship %s' % (owner_station_callsign,callsign['callsign']))
             # Check to see if we've seen this station before
             if owner_station_callsign in station_list:
-                print 'found existing station'
+                print('found existing station')
                 # have seen this station before so process it
                 station = station_list[owner_station_callsign]
                 # Check to see if we've moved up the ranking
-                print 'callsign rank = %s' % callsign_map['rank']
+                print('callsign rank = %s' % callsign_map['rank'])
                 # Some callsigns will not have a rank and thus we should
                 # add them to a low confidence list
                 if not callsign_map['rank']:
@@ -77,13 +73,13 @@ def station_by_zip(request,zip=None):
                     station['callsigns'].append(callsign['callsign'])
 
             else:
-                print 'create new station'
+                print('create new station')
                 # create a new station entry and add it to the stations list
                 station = {}
                 station['flagship'] = owner_station_callsign
                 station['confidence'] = callsign_map['confidence']
                 station['rank'] = callsign_map['rank']
-                print 'rank = %s' % station['rank']
+                print('rank = %s' % station['rank'])
                 station['short_common_name'] = owner_station['short_common_name']
                 # get id from url
                 station['id'] = _get_id_from_url(owner_station['$self'])
@@ -96,28 +92,28 @@ def station_by_zip(request,zip=None):
 
                 station_list[owner_station_callsign] = station
 
-            print 'finished with station: %s' % station
+            print('finished with station: %s' % station)
 
         # now we can break out the two lists by confidence
         hiconf = []
         loconf = []
-        for cs,station in station_list.iteritems():
+        for cs,station in station_list.items():
             if station['confidence'] == 100:
                 hiconf.append(station)
             else:
                 loconf.append(station)
 
-        # now sort both lists
-        hiconf = sorted(hiconf,key=lambda k: k['rank'])
-        loconf = sorted(loconf,key=lambda k: k['rank'])
+        # now sort both lists if unranked rank at 99999 to place at bottom of list
+        hiconf = sorted(hiconf,key=lambda k: k['rank'] or 99999)
+        loconf = sorted(loconf,key=lambda k: k['rank'] or 99999)
         context['hiconf'] = hiconf
         context['loconf'] = loconf
         #context['station_list'] = station_list
 
-    return render_to_response(
+    return render(
+        request,
         'station_by_zip.html',
-        context,
-        context_instance=RequestContext(request)
+        context
     )
 
 def _get_id_from_url(url):
@@ -130,17 +126,16 @@ def station_by_state(request):
     # Get list of states
     # http://services-qa.pbs.org/states.json/
 
-    list_of_states_url = settings.SODOR_ENDPOINT + 'states.json'
+    list_of_states_url = settings.TELSTAR_ENDPOINT + 'states.json'
     context = {}
 
     data = requests.get(list_of_states_url)
     if data.status_code == 200:
-        context['states'] = data.json['$items']
+        context['states'] = data.json()['$items']
 
-    return render_to_response(
-        'station_by_state.html',
-        context,
-        context_instance=RequestContext(request)
+    return render(
+        request,'station_by_state.html',
+        context
     )
 
 def station_state(request,state):
@@ -148,12 +143,12 @@ def station_state(request,state):
     # Get list of stations in a state
     # http://services-qa.pbs.org/stations/state/AL.json
 
-    list_of_stations_url = settings.SODOR_ENDPOINT + 'stations/state/' + state + '.json'
+    list_of_stations_url = settings.TELSTAR_ENDPOINT + 'stations/state/' + state + '.json'
     context = {}
 
     data = requests.get(list_of_stations_url)
     if data.status_code == 200:
-        jd = data.json['$items']
+        jd = data.json()['$items']
         station_list = []
         for s in jd:
             station = {}
@@ -170,10 +165,10 @@ def station_state(request,state):
         context['station_list'] = station_list
 
     context['statex'] = state
-    return render_to_response(
+    return render(
+        request,
         'station_by_state2.html',
-        context,
-        context_instance=RequestContext(request)
+        context
     )
 
 def station_by_ip(request, ip):
@@ -181,14 +176,12 @@ def station_by_ip(request, ip):
     # Get zip for this ip
     # http://services-qa.pbs.org/zipcodes/ip/138.88.141.44.json
 
-    list_of_zips_url = settings.SODOR_ENDPOINT + 'zipcodes/ip/' + ip + '.json'
+    list_of_zips_url = settings.TELSTAR_ENDPOINT + 'zipcodes/ip/' + ip + '.json'
     context = {}
     zipcode = None
-    print list_of_zips_url
     data = requests.get(list_of_zips_url)
     if data.status_code == 200:
-        print data.json
-        zipcode = data.json['$items'][0]['zipcode']
+        zipcode = data.json()['$items'][0]['zipcode']
 
     if not zipcode:
         return HttpResponseNotFound()
@@ -240,14 +233,12 @@ def station_by_geo(request):
     if not glat or not glong:
         HttpResponseNotFound('Must pass in lat and long coordinates')
 
-    list_of_zips_url = settings.SODOR_ENDPOINT + 'zipcodes/geo/' + glat + '/' + glong + '.json'
+    list_of_zips_url = settings.TELSTAR_ENDPOINT + 'zipcodes/geo/' + glat + '/' + glong + '.json'
     context = {}
     zipcode = None
-    print list_of_zips_url
     data = requests.get(list_of_zips_url,headers={'X-PBSAUTH': settings.TVSS_KEY})
     if data.status_code == 200:
-        print data.json
-        zipcode = data.json['$items'][0]['zipcode']
+        zipcode = data.json()['$items'][0]['zipcode']
 
     if not zipcode:
         return HttpResponseNotFound('No zipcodes found for those coordinates')
@@ -258,7 +249,7 @@ def view_station(request,station_id):
     """Get a station, iterate through callsigns, iterate through each
     callsigns' feeds, sort callsigns and feeds, then render.
     """
-    station_url = settings.SODOR_ENDPOINT + 'station/' + str(int(station_id)) + '.json'
+    station_url = settings.TELSTAR_ENDPOINT + 'station/' + str(int(station_id)) + '.json'
     context = {}
     try:
         station_data = client.load(station_url)
@@ -283,42 +274,25 @@ def view_station(request,station_id):
     for callsign_obj in children_callsigns.items():
         """iterate thru callsigns"""
         if callsign_obj.content.callsign == flagship_callsign:
-            callsign_obj.is_flagship = 'True'
+            callsign_obj.is_flagship = True
         else:
-            callsign_obj.is_flagship = None
+            callsign_obj.is_flagship = False
 
         updated_callsigns.append(callsign_obj)
         callsigns.append(callsign_obj.content.callsign)
 
         children_feeds = callsign_obj.related('children')
 
-        for feed in children_feeds.items():
-            feed_url = feed.self
-            feed_id = feed_url[feed_url.rfind('/')+1:-5]
-            feed_obj = {}
-            feed_obj['id'] = feed_id
-            # over the air channel
-            # aka subchannel
-            ota_channel = feed.related('summary').content
-            feed_obj['ota_channel'] = ota_channel
-            if callsign_obj.content.callsign == flagship_callsign:
-                feed_obj['is_callsign'] = 'True'
-            else:
-                feed_obj['is_callsign'] = None
-            feeds.append(feed_obj)
 
-    feeds_by_flagship = sorted(feeds, key=itemgetter('is_callsign'),
-                               reverse=True)
     callsigns_by_flagship = sorted(updated_callsigns,
                                    key=attrgetter('is_flagship'), reverse=True)
-    context['feeds'] = feeds_by_flagship
     context['callsigns'] = callsigns_by_flagship
     context = render_todays_listings(request, context, callsigns)
 
-    return render_to_response(
+    return render(
+        request,
         'view_station.html',
-        context,
-        context_instance = RequestContext(request)
+        context
     )
 
 def render_todays_listings(request, context, callsigns):
@@ -327,11 +301,11 @@ def render_todays_listings(request, context, callsigns):
     """
     context['listings_matrix'] = []
     for callsign in callsigns:
-        whats_on_today_url = settings.SODOR_ENDPOINT + 'tvss/' + callsign + '/today/'
+        whats_on_today_url = settings.TELSTAR_ENDPOINT + 'tvss/' + callsign + '/today/'
         data = requests.get(whats_on_today_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
 
         if data.status_code == 200:
-            jd = data.json
+            jd = data.json()
             # have to loop through and covert the goofy timestamps into datetime objects
             for f in jd['feeds']:
                 for l in f['listings']:
