@@ -36,6 +36,6 @@ Make sure your vagrant is running if you haven't already by using `vagrant up`
 
 Then ssh into the vagrant box by using `vagrant ssh`
 
-Start the dev server by using: `python manage.py runserver 10.0.2.15:8000`
+Start the dev server by using: `python manage.py runserver 0:8000`
 
 On your host system you should be able to use http://127.0.0.1:8000/ to access bluebell

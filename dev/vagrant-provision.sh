@@ -17,6 +17,10 @@ fi
 #sudo yum -y install memcached
 #
 # Run a bunch of commands as the user
+
+# update TSL to be able to use pip
+sudo yum install openssl libssl-dev
+
 echo "===> Running scripts"
 su $1 << 'SCRIPT'
 ls ~
