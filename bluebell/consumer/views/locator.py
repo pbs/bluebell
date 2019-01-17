@@ -293,10 +293,7 @@ def view_station(request,station_id):
         children_feeds = callsign_obj.related('children')
 
         for feed in children_feeds.items():
-            feed_url = feed.self
-            feed_id = feed_url[feed_url.rfind('/')+1:-5]
             feed_obj = {}
-            feed_obj['id'] = feed_id
             # over the air channel
             # aka subchannel
             ota_channel = feed.related('summary').content
