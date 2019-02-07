@@ -292,17 +292,18 @@ def view_station(request,station_id):
 
         children_feeds = callsign_obj.related('children')
 
-        for feed in children_feeds.items():
-            feed_obj = {}
-            # over the air channel
-            # aka subchannel
-            ota_channel = feed.related('summary').content
-            feed_obj['ota_channel'] = ota_channel
-            if callsign_obj.content.callsign == flagship_callsign:
-                feed_obj['is_callsign'] = 'True'
-            else:
-                feed_obj['is_callsign'] = None
-            feeds.append(feed_obj)
+        if children_feeds.self:
+            for feed in children_feeds.items():
+                feed_obj = {}
+                # over the air channel
+                # aka subchannel
+                ota_channel = feed.related('summary').content
+                feed_obj['ota_channel'] = ota_channel
+                if callsign_obj.content.callsign == flagship_callsign:
+                    feed_obj['is_callsign'] = 'True'
+                else:
+                    feed_obj['is_callsign'] = None
+                feeds.append(feed_obj)
 
     feeds_by_flagship = sorted(feeds, key=itemgetter('is_callsign'),
                                reverse=True)

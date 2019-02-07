@@ -49,40 +49,42 @@
             {% endfor %}
         </tbody>
     </table>
-    <h1>Feeds </h1>
-    <table class="table table-bordered table-condensed">
-        <thead>
-            <tr>
-                <td>Feed Short Name</td>
-                <td>Feed Full Name</td>
-                <td>Time Zone</td>
-                <td>Digital Channel Number</td>
-                <td>Analog Channel NUmber</td>
-                <td>Is Flagship?</td>
-        </thead>
-        <tbody>
-            {% for f in feeds %}
-            <tr>
+    {% if feeds %}
+        <h1>Feeds </h1>
+        <table class="table table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <td>Feed Short Name</td>
+                    <td>Feed Full Name</td>
+                    <td>Time Zone</td>
+                    <td>Digital Channel Number</td>
+                    <td>Analog Channel NUmber</td>
+                    <td>Is Flagship?</td>
+            </thead>
+            <tbody>
+                {% for f in feeds %}
+                <tr>
 
-                <td>
-                {%  if f.is_callsign  %}
-                    <b>
-                {%  endif %}
-                    {{ f.ota_channel.short_name }}
-                {%  if f.is_callsign %}
-                    </b>
-                {%  endif %}
-                </td>
-                <td>{{ f.ota_channel.full_name }}</td>
-                <td>{{ f.ota_channel.timezone }}</td>
-                <td>{{ f.ota_channel.digital_channel_number }}</td>
-                <td>{{ f.ota_channel.analog_channel_number }}</td>
-                <td>{{ f.is_callsign }}</td>
+                    <td>
+                    {%  if f.is_callsign  %}
+                        <b>
+                    {%  endif %}
+                        {{ f.ota_channel.short_name }}
+                    {%  if f.is_callsign %}
+                        </b>
+                    {%  endif %}
+                    </td>
+                    <td>{{ f.ota_channel.full_name }}</td>
+                    <td>{{ f.ota_channel.timezone }}</td>
+                    <td>{{ f.ota_channel.digital_channel_number }}</td>
+                    <td>{{ f.ota_channel.analog_channel_number }}</td>
+                    <td>{{ f.is_callsign }}</td>
 
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
     <h1>What's on Right Now</h1>
     {%  for listings_today in listings_matrix %}
     <div class="row">
