@@ -40,7 +40,7 @@ def station_by_zip(request,zip=None):
         if data.status_code != 200:
             return HttpResponseNotFound()
 
-        jd = data.json
+        jd = data.json()
         # have to loop through and generate the summary for the page
         station_list = {}
         for callsign_map in jd['$items']:
@@ -135,7 +135,7 @@ def station_by_state(request):
 
     data = requests.get(list_of_states_url)
     if data.status_code == 200:
-        context['states'] = data.json['$items']
+        context['states'] = data.json()['$items']
 
     return render_to_response(
         'station_by_state.html',
@@ -153,7 +153,7 @@ def station_state(request,state):
 
     data = requests.get(list_of_stations_url)
     if data.status_code == 200:
-        jd = data.json['$items']
+        jd = data.json()['$items']
         station_list = []
         for s in jd:
             station = {}
@@ -187,8 +187,8 @@ def station_by_ip(request, ip):
     print list_of_zips_url
     data = requests.get(list_of_zips_url)
     if data.status_code == 200:
-        print data.json
-        zipcode = data.json['$items'][0]['zipcode']
+        print data.json()
+        zipcode = data.json()['$items'][0]['zipcode']
 
     if not zipcode:
         return HttpResponseNotFound()
@@ -246,8 +246,8 @@ def station_by_geo(request):
     print list_of_zips_url
     data = requests.get(list_of_zips_url,headers={'X-PBSAUTH': settings.TVSS_KEY})
     if data.status_code == 200:
-        print data.json
-        zipcode = data.json['$items'][0]['zipcode']
+        print data.json()
+        zipcode = data.json()['$items'][0]['zipcode']
 
     if not zipcode:
         return HttpResponseNotFound('No zipcodes found for those coordinates')
@@ -329,7 +329,7 @@ def render_todays_listings(request, context, callsigns):
         data = requests.get(whats_on_today_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
 
         if data.status_code == 200:
-            jd = data.json
+            jd = data.json()
             # have to loop through and covert the goofy timestamps into datetime objects
             for f in jd['feeds']:
                 for l in f['listings']:
