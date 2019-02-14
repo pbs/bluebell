@@ -1,6 +1,6 @@
 Django==1.4
 python-dateutil==2.1
-requests==0.13.9
+requests==2.21.0
 resty==0.1
 six==1.2.0
 wsgiref==0.1.2

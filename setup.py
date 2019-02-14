@@ -8,7 +8,7 @@ dependencies = [
 
 setup(
     name='bluebell',
-    version='0.3',
+    version='0.4',
     description='Sodor API consumer.',
     author='TPG CORE Services Team',
     author_email='tpg-pbs-coreservices@3pillarglobal.com',

@@ -145,7 +145,7 @@ LOGGING = {
 }
 
 # Points to the API endpoint
-SODOR_ENDPOINT = 'http://services.pbs.org/'
+SODOR_ENDPOINT = 'https://services.pbs.org/'
 # We'll need a key for the listing information
 TVSS_KEY = 'put key here'
 
