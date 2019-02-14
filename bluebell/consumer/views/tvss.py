@@ -88,7 +88,7 @@ def view_show(request, show_id, callsign):
 
     data = requests.get(show_url, headers={'X-PBSAUTH': settings.TVSS_KEY})
     if data.status_code == 200:
-        jd = data.json
+        jd = data.json()
         # have to loop through and covert the goofy timestamps into datetime objects
         for l in jd['upcoming_shows']:
             l['day_obj'] = parser.parse(l['day'])
