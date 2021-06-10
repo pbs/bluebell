@@ -2,7 +2,7 @@
 from setuptools import setup
 
 dependencies = [
-    'django==1.4.1',
+    'django==2.2.24',
 ]
 
 
